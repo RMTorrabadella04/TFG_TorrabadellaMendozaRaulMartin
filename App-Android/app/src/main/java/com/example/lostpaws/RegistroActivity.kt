@@ -24,5 +24,7 @@ class RegistroActivity : AppCompatActivity() {
             val intent = Intent(this, LogginActivity::class.java)
             startActivity(intent)
         }
+
+        
     }
 }
