@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "553661815472",
+    "firebase_url": "https://lostpaws-ad8c9-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "lostpaws-ad8c9",
+    "storage_bucket": "lostpaws-ad8c9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553661815472:android:524960254dae8318133975",
+        "android_client_info": {
+          "package_name": "com.example.lostpaws"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKFToVS1c1ONPmC-HAQyxcclfOC-bfVj8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
