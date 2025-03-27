@@ -44,8 +44,8 @@ class LogginActivity : AppCompatActivity() {
     // Se encarga de verificar que el usuario exista en la base de datos
 
     private fun verificarUsuario(email: String, password: String) {
-        val database = FirebaseDatabase.getInstance().getReference("users")
-        database.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object :
+        val databaseAdmin = FirebaseDatabase.getInstance().getReference("admin")
+        databaseAdmin.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object :
             ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
@@ -53,18 +53,44 @@ class LogginActivity : AppCompatActivity() {
                         val storedPassword = userSnapshot.child("password").getValue(String::class.java)
                         if (storedPassword == password) {
                             // Usuario autenticado correctamente
-                            Toast.makeText(applicationContext, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext, "Bienvenido Administrador", Toast.LENGTH_SHORT).show()
 
                             // Ir a la pantalla principal
-                            val intent = Intent(applicationContext, MasterActivity::class.java)
+                            val intent = Intent(applicationContext, AdminActivity::class.java)
                             startActivity(intent)
                             finish()
-                        } else {
-                            Toast.makeText(applicationContext, "Contraseña incorrecta", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
-                    Toast.makeText(applicationContext, "No existe una cuenta con este correo", Toast.LENGTH_SHORT).show()
+
+                    val database = FirebaseDatabase.getInstance().getReference("users")
+                    database.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object :
+                        ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.exists()) {
+                                for (userSnapshot in snapshot.children) {
+                                    val storedPassword = userSnapshot.child("password").getValue(String::class.java)
+                                    if (storedPassword == password) {
+                                        // Usuario autenticado correctamente
+                                        Toast.makeText(applicationContext, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+
+                                        // Ir a la pantalla principal
+                                        val intent = Intent(applicationContext, MasterActivity::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                    } else {
+                                        Toast.makeText(applicationContext, "Contraseña incorrecta", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(applicationContext, "No existe una cuenta con este correo", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Toast.makeText(applicationContext, "Error en la base de datos", Toast.LENGTH_SHORT).show()
+                        }
+                    })
                 }
             }
 
@@ -72,6 +98,8 @@ class LogginActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Error en la base de datos", Toast.LENGTH_SHORT).show()
             }
         })
+
+
     }
 }
 

@@ -36,7 +36,7 @@ class RegistroActivity : AppCompatActivity() {
             val password = editTextPassword.text.toString()
 
             if (validacionDatos(this, name, email, password)){
-                saveUserData(name, email, password)
+                guardarInfoUsuarios(name, email, password)
 
                 val intent = Intent(this, LogginActivity::class.java)
                 startActivity(intent)
@@ -51,7 +51,7 @@ class RegistroActivity : AppCompatActivity() {
 
 // Guarda la info del usuario en la base de datos
 
-fun saveUserData(name: String, email: String, password: String){
+fun guardarInfoUsuarios(name: String, email: String, password: String){
     // Crear un objeto User
     val user = Usuario(name, email, password)
 
