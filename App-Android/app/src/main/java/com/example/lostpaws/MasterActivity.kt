@@ -20,12 +20,13 @@ class MasterActivity : AppCompatActivity(), OnFragmentChangeListener  {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        val fragment1 = FragmentSuperior()
         val fragment3 = CambioDePestanyas()
 
         if (savedInstanceState == null) {
             val fragmentManager: FragmentManager = supportFragmentManager
             val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.add(R.id.fragment_container1, fragment1)
             fragmentTransaction.add(R.id.fragment_container2, Perdidos())
             fragmentTransaction.add(R.id.fragment_container3, fragment3)
             fragmentTransaction.commit()
