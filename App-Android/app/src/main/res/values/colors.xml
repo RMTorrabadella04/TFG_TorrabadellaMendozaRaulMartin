@@ -6,4 +6,5 @@
     <color name="verde_fondo2">#81af6c</color>
     <color name="verde_boton">#5a8945</color>
     <color name="amarillo_fondo">#f8f7d3</color>
+    <color name="amarillo_letra">#EDFFFEDD</color>
 </resources>

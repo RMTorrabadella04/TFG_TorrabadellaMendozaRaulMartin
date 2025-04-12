@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/amarillo_fondo"
+    tools:context=".Ajustes"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="36dp">
+
+
+    <Button
+        android:id="@+id/btnPrivacidad"
+        android:layout_width="268dp"
+        android:layout_height="87dp"
+        android:backgroundTint="@color/verde_fondo2"
+        android:textColor="@color/amarillo_letra"
+        android:text="PRIVACIDAD"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.068" />
+
+    <Button
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="268dp"
+        android:layout_height="87dp"
+        android:backgroundTint="@color/verde_fondo2"
+        android:textColor="@color/amarillo_letra"
+        android:text="CERRAR SESIÓN"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.276" />
+
+    <Button
+        android:id="@+id/btnCambiarContrasenya"
+        android:layout_width="268dp"
+        android:layout_height="87dp"
+        android:backgroundTint="@color/verde_fondo2"
+        android:textColor="@color/amarillo_letra"
+        android:text="CAMBIAR CONTRASEÑA"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.484" />
+
+    <Button
+        android:id="@+id/btnBorrarCuenta"
+        android:layout_width="268dp"
+        android:layout_height="87dp"
+        android:backgroundTint="@color/verde_fondo2"
+        android:textColor="@color/amarillo_letra"
+        android:text="BORRAR CUENTA"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.697" />
+
+    <Button
+        android:id="@+id/btnHacerDonacion"
+        android:layout_width="268dp"
+        android:layout_height="87dp"
+        android:backgroundTint="@color/verde_fondo2"
+        android:textColor="@color/amarillo_letra"
+        android:text="HACER DONACIÓN"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.908" />
+</androidx.constraintlayout.widget.ConstraintLayout>

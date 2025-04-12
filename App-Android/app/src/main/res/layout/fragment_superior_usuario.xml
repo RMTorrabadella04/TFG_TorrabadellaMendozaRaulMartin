@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
+    android:layout_height="77dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/verde_boton"
     android:orientation="horizontal"
@@ -10,8 +10,7 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintHeight_default="wrap"
     android:layout_gravity="top"
-    tools:context=".FragmentSuperior">
-
+    tools:context=".FragmentSuperiorUsuario">
 
     <ImageView
         android:id="@+id/imageView3"
@@ -27,34 +26,19 @@
         tools:ignore="HardcodedText"/>
 
     <ImageButton
-        android:id="@+id/btnNotificaciones"
-        android:layout_width="82dp"
-        android:layout_height="66dp"
+        android:id="@+id/btnAjustes"
+        android:layout_width="61dp"
+        android:layout_height="48dp"
         android:backgroundTint="@android:color/transparent"
-        android:src="@drawable/notificaciones"
-        android:contentDescription="Notificaciones"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.29"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.625"
-        tools:ignore="HardcodedText" />
-
-    <ImageButton
-        android:id="@+id/btnUsuario"
-        android:layout_width="80dp"
-        android:layout_height="66dp"
-        android:backgroundTint="@android:color/transparent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/usuario"
         android:contentDescription="Usuario"
+        android:scaleType="fitCenter"
+        android:src="@drawable/configuracion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.714"
+        app:layout_constraintHorizontal_bias="0.703"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.625"
+        app:layout_constraintVertical_bias="0.647"
         tools:ignore="HardcodedText" />
 
 
