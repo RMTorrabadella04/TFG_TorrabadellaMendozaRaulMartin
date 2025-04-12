@@ -2,6 +2,7 @@ package com.example.lostpaws
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -74,6 +75,9 @@ class LogginActivity : AppCompatActivity() {
                                         // Usuario autenticado correctamente
                                         Toast.makeText(applicationContext, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
 
+                                        // Me guardo el correo para saber quien se ha registrado y pillar su info
+                                        guardarSesion(email, applicationContext)
+
                                         // Ir a la pantalla principal
                                         val intent = Intent(applicationContext, MasterActivity::class.java)
                                         startActivity(intent)
@@ -103,6 +107,12 @@ class LogginActivity : AppCompatActivity() {
     }
 }
 
+fun guardarSesion(email: String, context: Context) {
+    val sharedPreferences: SharedPreferences = context.getSharedPreferences("Sesion", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
+    editor.putString("email", email) // Guardamos el email
+    editor.apply() // Aplicamos los cambios
+}
 
 // Función para validar el email y la contraseña en el login
 fun validacionLogin(context: Context, email: String, password: String): Boolean {
