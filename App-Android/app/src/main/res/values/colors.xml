@@ -7,4 +7,5 @@
     <color name="verde_boton">#5a8945</color>
     <color name="amarillo_fondo">#f8f7d3</color>
     <color name="amarillo_letra">#EDFFFEDD</color>
+    <color name="amarillo_editText">#B8B578</color>
 </resources>

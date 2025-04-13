@@ -37,7 +37,6 @@ class Usuario : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_usuario, container, false)
     }
 
@@ -54,11 +53,9 @@ class Usuario : Fragment() {
                 if (snapshot.exists()) {
                     for (userSnapshot in snapshot.children) {
                         userId = userSnapshot.key // UID del usuario
-                        userName = userSnapshot.child("name").getValue(String::class.java) // Nombre del usuario
-                        userEmail = userSnapshot.child("email").getValue(String::class.java) // Correo del usuario
+                        userName = userSnapshot.child("name").getValue(String::class.java)
+                        userEmail = userSnapshot.child("email").getValue(String::class.java)
                     }
-
-                    // Llamamos a cambiarTexto después de obtener los datos
                     cambiarTexto()
                 }
             }
@@ -70,7 +67,6 @@ class Usuario : Fragment() {
     }
 
     fun cambiarTexto() {
-        // Ahora que los valores están asignados, puedes usarlos en los TextView
         val textoId = requireView().findViewById<TextView>(R.id.textoId)
         textoId.text = "ID: " + userId
 

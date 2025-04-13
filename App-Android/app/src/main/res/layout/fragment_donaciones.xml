@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Donaciones">
+
+
+    <TextView
+        android:id="@+id/textoDonaciones"
+        android:layout_width="172dp"
+        android:layout_height="57dp"
+        android:gravity="center"
+        android:text="DONACIONES"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.083" />
+
+    <EditText
+        android:id="@+id/nCuentaDestinatario"
+        android:layout_width="335dp"
+        android:layout_height="60dp"
+        android:hint="Número de Cuenta"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textoDonaciones"
+        app:layout_constraintVertical_bias="0.673" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="211dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="44dp"
+        android:gravity="center_vertical"
+        android:text="Cuenta Destinataria"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/nCuentaDestinatario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.19"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fCaducidad"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="211dp"
+        android:layout_height="49dp"
+        android:gravity="center_vertical"
+        android:text="Cuenta Emisora"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/nCuentaEmisor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.19"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textoDonaciones"
+        app:layout_constraintVertical_bias="0.686" />
+
+    <EditText
+        android:id="@+id/CVV"
+        android:layout_width="102dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="36dp"
+        android:hint="CVV"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.888"
+        app:layout_constraintStart_toEndOf="@+id/fCaducidad"
+        app:layout_constraintTop_toBottomOf="@+id/textoDonaciones"
+        app:layout_constraintVertical_bias="0.376" />
+
+    <EditText
+        android:id="@+id/fCaducidad"
+        android:layout_width="217dp"
+        android:layout_height="60dp"
+        android:hint="Fecha de Caducidad"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.195"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textoDonaciones"
+        app:layout_constraintVertical_bias="0.376" />
+
+    <EditText
+        android:id="@+id/nCuentaEmisor"
+        android:layout_width="335dp"
+        android:layout_height="60dp"
+        android:hint="Número de Cuenta"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textoDonaciones"
+        app:layout_constraintVertical_bias="0.236" />
+
+    <Button
+        android:id="@+id/btnEnviar"
+        android:layout_width="229dp"
+        android:layout_height="77dp"
+        android:backgroundTint="@color/verde_boton"
+        android:text="ENVIAR"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nCuentaDestinatario" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
