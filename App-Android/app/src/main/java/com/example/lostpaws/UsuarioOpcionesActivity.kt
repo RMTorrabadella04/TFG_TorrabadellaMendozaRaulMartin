@@ -26,7 +26,7 @@ class UsuarioOpcionesActivity : AppCompatActivity(), OnFragmentChangeListener,On
             val fragmentManager: FragmentManager = supportFragmentManager
             val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
             fragmentTransaction.add(R.id.fragment_container1, fragment1)
-            fragmentTransaction.add(R.id.fragment_container2, Usuario())
+            fragmentTransaction.add(R.id.fragment_container2, Usuarios())
             fragmentTransaction.commit()
         }
     }

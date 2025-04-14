@@ -15,7 +15,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class Usuario : Fragment() {
+class Usuarios : Fragment() {
 
     private var userId: String? = null
     private var userName: String? = null
