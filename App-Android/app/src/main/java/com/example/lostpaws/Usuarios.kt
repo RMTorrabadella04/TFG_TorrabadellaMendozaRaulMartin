@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.database.DataSnapshot
@@ -17,6 +18,8 @@ import com.google.firebase.database.ValueEventListener
 
 class Usuarios : Fragment() {
 
+
+    private var fragmentChangeListener: OnFragmentChangeListener? = null
     private var userId: String? = null
     private var userName: String? = null
     private var userEmail: String? = null
@@ -39,6 +42,23 @@ class Usuarios : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_usuario, container, false)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val botonEditar = requireView().findViewById<ImageButton>(R.id.btnEditar)
+
+        botonEditar.setOnClickListener{
+            fragmentChangeListener?.onFragmentChange(EditarUsuario())
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Asegúrate de que la actividad implemente los listeners
+        fragmentChangeListener = context as? OnFragmentChangeListener
+    }
+
 
     private fun obtenerSesion(context: Context): String? {
         val sharedPreferences: SharedPreferences = context.getSharedPreferences("Sesion", Context.MODE_PRIVATE)

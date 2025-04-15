@@ -98,9 +98,9 @@ fun validacionDatos(context: Context, name: String, email: String, password: Str
         correcto = false
     }
 
-    // Validar que el correo contenga "@" y "."
-    if (!email.contains("@") || !email.contains(".")) {
-        Toast.makeText(context, "El correo electrónico no es válido.", Toast.LENGTH_SHORT).show()
+
+    if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        Toast.makeText(context, "El formato del correo electrónico no es válido.", Toast.LENGTH_SHORT).show()
         correcto = false
     }
 

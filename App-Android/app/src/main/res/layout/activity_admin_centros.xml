@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AdminActivity">
+    tools:context=".AdminCentrosActivity">
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
@@ -63,17 +64,34 @@
         app:layout_constraintVertical_bias="0.075" />
 
     <Button
-        android:id="@+id/btnCentros"
-        android:layout_width="267dp"
-        android:layout_height="71dp"
+        android:id="@+id/btnAdminUsers"
+        android:layout_width="265dp"
+        android:layout_height="69dp"
         android:backgroundTint="@color/verde_boton"
-        android:text="APARTADO CENTROS"
+        android:text="APARTADO USUARIOS"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.932"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineBottom" />
+        app:layout_constraintTop_toTopOf="@+id/guidelineBottom"
+        app:layout_constraintVertical_bias="0.333" />
+
+    <Button
+        android:id="@+id/btnAñadir"
+        android:layout_width="117dp"
+        android:layout_height="69dp"
+        android:backgroundTint="@color/verde_boton"
+        android:text="AÑADIR"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.029"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineBottom"
+        app:layout_constraintVertical_bias="0.333" />
 
     <Button
         android:id="@+id/btnBuscar"

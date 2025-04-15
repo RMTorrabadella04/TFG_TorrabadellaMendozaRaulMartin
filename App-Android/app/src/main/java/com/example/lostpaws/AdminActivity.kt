@@ -2,6 +2,7 @@ package com.example.lostpaws
 
 import Data.Usuario
 import Data.UsuarioVistaAdmin
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -48,6 +49,7 @@ class AdminActivity : AppCompatActivity() {
         val editText: EditText = findViewById(R.id.textoBusqueda)
 
         val botonBusqueda: Button = findViewById(R.id.btnBuscar)
+        val botonCentros: Button = findViewById(R.id.btnCentros)
 
         // Cambiar el hint dependiendo de la opción seleccionada
         spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
@@ -85,6 +87,12 @@ class AdminActivity : AppCompatActivity() {
             val searchType = spinner.selectedItem.toString()  // Opción actual del spinner
             realizarBusqueda(searchType)
         }
+
+        botonCentros.setOnClickListener {
+            val intent = Intent(this, AdminCentrosActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 

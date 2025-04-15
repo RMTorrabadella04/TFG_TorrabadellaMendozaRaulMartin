@@ -17,6 +17,9 @@
         android:theme="@style/Theme.LostPaws"
         tools:targetApi="31">
         <activity
+            android:name=".AdminCentrosActivity"
+            android:exported="false" />
+        <activity
             android:name=".UsuarioOpcionesActivity"
             android:exported="false" />
         <activity
