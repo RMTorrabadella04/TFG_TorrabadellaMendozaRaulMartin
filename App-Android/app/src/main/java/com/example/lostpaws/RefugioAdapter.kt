@@ -40,7 +40,7 @@ class RefugioAdapter(
             direccionText.text = refugio.direccion
             telefonoText.text = refugio.telefono
             emailText.text = refugio.email
-            capacidadText.text = "Capacidad: ${refugio.capacidad}"
+            capacidadText.text = "${refugio.capacidad}"
             deleteButton.setOnClickListener { deleteListener(refugio) }
         }
     }

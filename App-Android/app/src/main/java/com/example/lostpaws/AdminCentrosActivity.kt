@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -23,22 +24,12 @@ import com.google.firebase.database.*
 
 class AdminCentrosActivity : AppCompatActivity() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: RecyclerView.Adapter<*>
-    private val centrosRList = mutableListOf<Refugio>()
-    private val centrosVList = mutableListOf<Veterinario>()
     private val db: DatabaseReference = FirebaseDatabase.getInstance().reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_admin_centros)
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         if (savedInstanceState == null) {
             val fragmentManager: FragmentManager = supportFragmentManager
@@ -47,97 +38,111 @@ class AdminCentrosActivity : AppCompatActivity() {
             fragmentTransaction.commit()
         }
 
+        val extra: EditText = this.findViewById(R.id.editTextExtra)
         val opcionesBusqueda = listOf("Refugios", "Veterinarios")
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, opcionesBusqueda)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        val spinner: Spinner = findViewById(R.id.queTipodeBusqueda)
+        val spinner: Spinner = this.findViewById(R.id.tipoCentro)
         spinner.adapter = spinnerAdapter
 
-        val editText: EditText = findViewById(R.id.textoBusqueda)
-        val botonBusqueda: Button = findViewById(R.id.btnBuscar)
-        val botonAdminUsers: Button = findViewById(R.id.btnAdminUsers)
-
-        recyclerView = findViewById(R.id.userList)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parentView: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parentView: AdapterView<*>,
+                selectedView: View?,
+                position: Int,
+                id: Long
+            ) {
                 val searchType = parentView.getItemAtPosition(position).toString()
 
+                //
                 when (searchType) {
                     "Refugios" -> {
-                        editText.hint = "Introduce el Nombre del Refugio"
-                        centrosRList.clear()
-                        adapter = RefugioAdapter(this@AdminCentrosActivity, centrosRList) { refugio ->
-                            // Acción de eliminar refugio (si la necesitas)
-                        }
+
+                        extra.hint = "Introduzca la Capacidad del Refugio"
+
                     }
+
                     "Veterinarios" -> {
-                        editText.hint = "Introduce el Nombre del Veterinario"
-                        centrosVList.clear()
-                        adapter = VeterinarioAdapter(this@AdminCentrosActivity, centrosVList) { veterinario ->
-                            // Acción de eliminar veterinario (si la necesitas)
-                        }
+
+                        extra.hint = "Introduzca si tiene Centro de Operaciones el Veterinario (Si/No)"
+
                     }
                 }
 
-                recyclerView.adapter = adapter
-                adapter.notifyDataSetChanged()
             }
 
-            override fun onNothingSelected(parentView: AdapterView<*>) {
-                editText.hint = "Buscar todos los usuarios"
-                centrosRList.clear()
-                centrosVList.clear()
-                adapter.notifyDataSetChanged()
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
             }
         }
 
-        botonBusqueda.setOnClickListener {
-            val queryText = editText.text.toString().trim()
-            val tipoBusqueda = spinner.selectedItem.toString()
-
-            if (tipoBusqueda == "Refugios") {
-                centrosRList.clear()
-                db.child("refugios").orderByChild("nombre").addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for (refSnapshot in snapshot.children) {
-                            val refugio = refSnapshot.getValue(Refugio::class.java)
-                            if (refugio != null && (queryText.isEmpty() || refugio.nombre.contains(queryText, ignoreCase = true))) {
-                                centrosRList.add(refugio)
-                            }
-                        }
-                        adapter.notifyDataSetChanged()
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        // Manejar error si lo deseas
-                    }
-                })
-            } else if (tipoBusqueda == "Veterinarios") {
-                centrosVList.clear()
-                db.child("veterinarios").orderByChild("nombre").addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for (vetSnapshot in snapshot.children) {
-                            val veterinario = vetSnapshot.getValue(Veterinario::class.java)
-                            if (veterinario != null && (queryText.isEmpty() || veterinario.nombre.contains(queryText, ignoreCase = true))) {
-                                centrosVList.add(veterinario)
-                            }
-                        }
-                        adapter.notifyDataSetChanged()
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        // Manejar error si lo deseas
-                    }
-                })
-            }
-        }
+        val botonAdminUsers: Button = findViewById(R.id.btnAdminUsers)
 
         botonAdminUsers.setOnClickListener {
             val intent = Intent(this, AdminActivity::class.java)
             startActivity(intent)
         }
+
+        val botonGuardar: Button = findViewById(R.id.btnGuardar)
+
+        botonGuardar.setOnClickListener {
+            val nombre = findViewById<EditText>(R.id.editTextNombre).text.toString().trim()
+            val direccion = findViewById<EditText>(R.id.editTextDireccion).text.toString().trim()
+            val telefono = findViewById<EditText>(R.id.editTextTelefono).text.toString().trim()
+            val email = findViewById<EditText>(R.id.editTextEmail).text.toString().trim()
+            val extra = findViewById<EditText>(R.id.editTextExtra).text.toString().trim()
+            val tipoCentro = spinner.selectedItem.toString()
+
+            if (nombre.isEmpty() || direccion.isEmpty() || telefono.isEmpty() || email.isEmpty() || extra.isEmpty()) {
+                Toast.makeText(this, "Rellena todos los campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "Correo inválido", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val centrosRef = db.child("centros")
+            val centroId = centrosRef.push().key
+
+            when (tipoCentro) {
+                "Refugios" -> {
+                    val capacidad = extra.toIntOrNull()
+                    if (capacidad == null) {
+                        Toast.makeText(this, "Capacidad inválida", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
+
+                    val refugio = Refugio(nombre, direccion, telefono, email, capacidad)
+                    centroId?.let {
+                        centrosRef.child(it).setValue(refugio)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Refugio guardado", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "Error al guardar refugio", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                }
+
+                "Veterinarios" -> {
+                    val puedeOperar = extra.equals("si", ignoreCase = true)
+                    val veterinario = Veterinario(nombre, direccion, telefono, email, puedeOperar)
+                    centroId?.let {
+                        centrosRef.child(it).setValue(veterinario)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Veterinario guardado", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "Error al guardar veterinario", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                }
+            }
+        }
+
     }
+
 }

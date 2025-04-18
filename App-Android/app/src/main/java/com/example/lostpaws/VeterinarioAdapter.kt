@@ -40,7 +40,7 @@ class VeterinarioAdapter(
             direccionText.text = veterinario.direccion
             telefonoText.text = veterinario.telefono
             emailText.text = veterinario.email
-            puedeOperarText.text = if (veterinario.puede_operar) "Puede operar: Sí" else "Puede operar: No"
+            puedeOperarText.text = if (veterinario.puede_operar) "Sí" else "No"
             deleteButton.setOnClickListener { deleteListener(veterinario) }
         }
     }

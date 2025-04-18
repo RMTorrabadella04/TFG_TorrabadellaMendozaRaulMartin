@@ -67,7 +67,7 @@
         android:layout_width="267dp"
         android:layout_height="71dp"
         android:backgroundTint="@color/verde_boton"
-        android:text="APARTADO CENTROS"
+        android:text="AÑADIR CENTROS"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

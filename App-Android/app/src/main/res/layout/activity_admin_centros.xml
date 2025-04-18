@@ -8,6 +8,30 @@
     tools:context=".AdminCentrosActivity">
 
 
+    <EditText
+        android:id="@+id/editTextTelefono"
+        android:layout_width="285dp"
+        android:layout_height="57dp"
+        android:background="@color/amarillo_fondo"
+        android:hint="Introduce el Telefono"
+        app:layout_constraintBottom_toTopOf="@+id/editTextEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.934" />
+
+    <EditText
+        android:id="@+id/editTextExtra"
+        android:layout_width="285dp"
+        android:layout_height="57dp"
+        android:background="@color/amarillo_fondo"
+        android:hint="Introduce el EXTRA"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.804" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"
@@ -24,12 +48,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineMid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="552dp" />
+
+    <Spinner
+        android:id="@+id/tipoCentro"
+        android:layout_width="366dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="20dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/editTextNombre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.333" />
+
+    <EditText
+        android:id="@+id/editTextEmail"
+        android:layout_width="285dp"
+        android:layout_height="57dp"
+        android:background="@color/amarillo_fondo"
+        android:hint="Introduce el Email"
+        app:layout_constraintBottom_toTopOf="@+id/editTextExtra"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.94" />
+
+    <EditText
+        android:id="@+id/editTextNombre"
+        android:layout_width="285dp"
+        android:layout_height="57dp"
+        android:background="@color/amarillo_fondo"
+        android:hint="Introduce el Nombre"
+        app:layout_constraintBottom_toTopOf="@+id/editTextDireccion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.803" />
+
+    <EditText
+        android:id="@+id/editTextDireccion"
+        android:layout_width="285dp"
+        android:layout_height="57dp"
+        android:background="@color/amarillo_fondo"
+        android:hint="Introduce el Dirección"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTelefono"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.883" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBottom"
@@ -39,80 +106,34 @@
         app:layout_constraintGuide_begin="653dp" />
 
 
-    <Spinner
-        android:id="@+id/queTipodeBusqueda"
-        android:layout_width="366dp"
-        android:layout_height="53dp"
-        android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toTopOf="@+id/userList"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.644"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.924" />
-
-    <EditText
-        android:id="@+id/textoBusqueda"
-        android:layout_width="239dp"
-        android:layout_height="48dp"
-        android:hint="Pon la info a buscar"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineMid"
-        app:layout_constraintEnd_toStartOf="@+id/btnBuscar"
-        app:layout_constraintHorizontal_bias="0.557"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.075" />
-
     <Button
         android:id="@+id/btnAdminUsers"
-        android:layout_width="265dp"
-        android:layout_height="69dp"
+        android:layout_width="207dp"
+        android:layout_height="67dp"
         android:backgroundTint="@color/verde_boton"
         android:text="APARTADO USUARIOS"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.932"
+        app:layout_constraintHorizontal_bias="0.921"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineBottom"
-        app:layout_constraintVertical_bias="0.333" />
+        app:layout_constraintVertical_bias="0.454" />
 
     <Button
-        android:id="@+id/btnAñadir"
-        android:layout_width="117dp"
-        android:layout_height="69dp"
+        android:id="@+id/btnGuardar"
+        android:layout_width="141dp"
+        android:layout_height="67dp"
         android:backgroundTint="@color/verde_boton"
-        android:text="AÑADIR"
+        android:text="GUARDAR"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.029"
+        app:layout_constraintHorizontal_bias="0.078"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineBottom"
-        app:layout_constraintVertical_bias="0.333" />
-
-    <Button
-        android:id="@+id/btnBuscar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/verde_boton"
-        android:text="BUSCAR"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineMid"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.947"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.075" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/userList"
-        android:layout_width="412dp"
-        android:layout_height="465dp"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guidelineMid" />
+        app:layout_constraintVertical_bias="0.454" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
