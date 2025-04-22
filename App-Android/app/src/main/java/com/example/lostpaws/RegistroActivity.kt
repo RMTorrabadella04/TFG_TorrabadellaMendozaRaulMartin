@@ -118,7 +118,6 @@ fun validacionDatos(context: Context, name: String, email: String, password: Str
                     callback(true)
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(context, "Error en la base de datos", Toast.LENGTH_SHORT).show()
                 callback(false) // En caso de error en la base de datos
@@ -131,3 +130,16 @@ fun validacionDatos(context: Context, name: String, email: String, password: Str
     return true // La función siempre retorna true ya que la validación asincrónica se maneja en el callback
 }
 
+
+
+// Se usa solo para el Test, ya que el toast y las cosas de firebase son muy dificiles de "comprobar"
+
+// Además de que !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() no es disponible para usarse en los test
+// por lo que lo cambie a eso que es una aproximación
+fun validacionDatosParaTest(email: String, password: String): Boolean {
+    if (password.length < 6) return false
+
+    val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+    if (!email.matches(emailPattern.toRegex())) return false
+    return true
+}

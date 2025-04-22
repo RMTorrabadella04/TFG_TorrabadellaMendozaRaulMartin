@@ -56,7 +56,7 @@ class Donaciones : Fragment() {
         fragmentChangeListener = context as? OnFragmentChangeListener
     }
 
-    private fun validaciondatos(emisor: String, caducidad: String, codigoCVV: String, destinatario: String): Boolean {
+    fun validaciondatos(emisor: String, caducidad: String, codigoCVV: String, destinatario: String): Boolean {
 
         var correcto = true
 
@@ -123,5 +123,67 @@ class Donaciones : Fragment() {
         return correctoLocal
     }
 
+
+    // Para los Test (Debido a que usa toast)
+    // Versión para tests de la función validaciondatos (elimina dependencias de Android)
+
+    fun validacionDatosDonacionParaTest(emisor: String, caducidad: String, codigoCVV: String, destinatario: String): Boolean {
+        var correcto = true
+
+        if (emisor.length != 16) {
+            correcto = false
+        }
+
+        if (destinatario.length != 16) {
+            correcto = false
+        }
+
+        if (codigoCVV.length != 3) {
+            correcto = false
+        }
+
+        correcto = validarFechaCaducidadParaTest(caducidad, correcto)
+
+        return correcto
+    }
+
+    // Versión para tests de la función validarfechacaducidad
+    fun validarFechaCaducidadParaTest(fCaducidad: String, correcto: Boolean): Boolean {
+        var correctoLocal = correcto
+
+        // Validación del formato de la fecha
+        if (!fCaducidad.matches(Regex("^\\d{2}/\\d{2}$"))) {
+            correctoLocal = false
+            return correctoLocal
+        }
+
+        // Extraemos el mes y año
+        val partes = fCaducidad.split("/")
+        if (partes.size != 2) {
+            return false
+        }
+
+        // Convertimos a enteros para hacer comparaciones
+        try {
+            val mes = partes[0].toInt()
+            val año = partes[1].toInt()
+
+            // Validamos el mes
+            if (mes !in 1..12) {
+                correctoLocal = false
+            }
+
+            // Validamos el año
+            val añoActual = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) % 100
+            if (año < añoActual) {
+                correctoLocal = false
+            }
+
+        } catch (e: NumberFormatException) {
+            return false
+        }
+
+        return correctoLocal
+    }
 
 }

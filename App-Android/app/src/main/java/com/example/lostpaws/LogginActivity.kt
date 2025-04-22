@@ -121,10 +121,19 @@ fun validacionLogin(context: Context, email: String, password: String): Boolean 
         return false
     }
 
-    if (!email.contains("@") || !email.contains(".")) {
+    if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
         Toast.makeText(context, "El correo electrónico no es válido.", Toast.LENGTH_SHORT).show()
         return false
     }
 
+    return true
+}
+
+// Para el test
+fun validacionLoginParaTest(email: String, password: String): Boolean {
+    if (password.isEmpty()) return false
+
+    val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+    if (!email.matches(emailPattern.toRegex())) return false
     return true
 }
