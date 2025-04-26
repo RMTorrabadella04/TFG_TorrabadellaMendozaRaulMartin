@@ -7,104 +7,38 @@
     android:layout_height="match_parent"
     tools:context=".AdminCentrosActivity">
 
-
-    <EditText
-        android:id="@+id/editTextTelefono"
-        android:layout_width="285dp"
-        android:layout_height="57dp"
-        android:background="@color/amarillo_fondo"
-        android:hint="Introduce el Telefono"
-        app:layout_constraintBottom_toTopOf="@+id/editTextEmail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.934" />
-
-    <EditText
-        android:id="@+id/editTextExtra"
-        android:layout_width="285dp"
-        android:layout_height="57dp"
-        android:background="@color/amarillo_fondo"
-        android:hint="Introduce el EXTRA"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.804" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="65dp" />
-
     <FrameLayout
         android:id="@+id/fragment_container1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.090287276" />
 
-    <Spinner
-        android:id="@+id/tipoCentro"
-        android:layout_width="366dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="20dp"
-        android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNombre"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.333" />
 
-    <EditText
-        android:id="@+id/editTextEmail"
-        android:layout_width="285dp"
-        android:layout_height="57dp"
-        android:background="@color/amarillo_fondo"
-        android:hint="Introduce el Email"
-        app:layout_constraintBottom_toTopOf="@+id/editTextExtra"
+    <FrameLayout
+        android:id="@+id/fragment_container2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.94" />
-
-    <EditText
-        android:id="@+id/editTextNombre"
-        android:layout_width="285dp"
-        android:layout_height="57dp"
-        android:background="@color/amarillo_fondo"
-        android:hint="Introduce el Nombre"
-        app:layout_constraintBottom_toTopOf="@+id/editTextDireccion"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.803" />
-
-    <EditText
-        android:id="@+id/editTextDireccion"
-        android:layout_width="285dp"
-        android:layout_height="57dp"
-        android:background="@color/amarillo_fondo"
-        android:hint="Introduce el Dirección"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTelefono"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.883" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="653dp" />
-
+        app:layout_constraintGuide_percent="0.85" />
 
     <Button
         android:id="@+id/btnAdminUsers"
@@ -122,11 +56,11 @@
         app:layout_constraintVertical_bias="0.454" />
 
     <Button
-        android:id="@+id/btnGuardar"
+        android:id="@+id/btnCentros"
         android:layout_width="141dp"
         android:layout_height="67dp"
         android:backgroundTint="@color/verde_boton"
-        android:text="GUARDAR"
+        android:text="VER CENTROS"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

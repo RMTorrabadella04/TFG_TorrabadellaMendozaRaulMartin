@@ -12,7 +12,8 @@ import com.example.lostpaws.Data.Veterinario
 class VeterinarioAdapter(
     private val context: Context,
     private val veterinarioList: List<Veterinario>,
-    private val deleteListener: (Veterinario) -> Unit
+    private val deleteListener: (Veterinario) -> Unit,
+    private val showDeleteButton: Boolean = true
 ) : RecyclerView.Adapter<VeterinarioAdapter.VeterinarioViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VeterinarioViewHolder {
@@ -41,7 +42,13 @@ class VeterinarioAdapter(
             telefonoText.text = veterinario.telefono
             emailText.text = veterinario.email
             puedeOperarText.text = if (veterinario.puede_operar) "Sí" else "No"
-            deleteButton.setOnClickListener { deleteListener(veterinario) }
+
+            if (showDeleteButton) {
+                deleteButton.visibility = View.VISIBLE
+                deleteButton.setOnClickListener { deleteListener(veterinario) }
+            } else {
+                deleteButton.visibility = View.GONE
+            }
         }
     }
 }

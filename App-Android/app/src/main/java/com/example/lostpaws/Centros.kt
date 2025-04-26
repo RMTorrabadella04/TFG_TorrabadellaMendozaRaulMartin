@@ -1,5 +1,6 @@
 package com.example.lostpaws
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +10,10 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lostpaws.Data.Refugio
@@ -28,15 +28,14 @@ class Centros : Fragment() {
     private val centrosVList = mutableListOf<Veterinario>()
     private val db: DatabaseReference = FirebaseDatabase.getInstance().reference
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    companion object {
+        var desdeAdmin: Boolean = false
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_centros, container, false)
 
         ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main)) { v, insets ->
@@ -45,6 +44,9 @@ class Centros : Fragment() {
             insets
         }
 
+        if (desdeAdmin) {
+            view.findViewById<View>(R.id.main).setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.sinFondo))
+        }
 
         val opcionesBusqueda = listOf("Refugios", "Veterinarios")
         val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, opcionesBusqueda)
@@ -62,45 +64,34 @@ class Centros : Fragment() {
             override fun onItemSelected(parentView: AdapterView<*>, selectedView: View?, position: Int, id: Long) {
                 val searchType = parentView.getItemAtPosition(position).toString()
 
-                when (searchType) {
-                    "Refugios" -> {
-                        centrosRList.clear()
-                        adapter = RefugioAdapter(requireContext(), centrosRList) { refugio ->
-
-                        }
-                    }
-                    "Veterinarios" -> {
-                        centrosVList.clear()
-                        adapter = VeterinarioAdapter(requireContext(), centrosVList) { veterinario ->
-                        }
-                    }
+                if (searchType == "Refugios") {
+                    centrosRList.clear()
+                    adapter = RefugioAdapter(requireContext(), centrosRList, { refugio ->
+                        if (desdeAdmin) eliminarRefugio(refugio)
+                    }, showDeleteButton = desdeAdmin)
+                } else {
+                    centrosVList.clear()
+                    adapter = VeterinarioAdapter(requireContext(), centrosVList, { veterinario ->
+                        if (desdeAdmin) eliminarVeterinario(veterinario)
+                    }, showDeleteButton = desdeAdmin)
                 }
 
                 recyclerView.adapter = adapter
                 adapter.notifyDataSetChanged()
             }
 
-            override fun onNothingSelected(parentView: AdapterView<*>) {
-                centrosRList.clear()
-                centrosVList.clear()
-                adapter.notifyDataSetChanged()
-            }
+            override fun onNothingSelected(parentView: AdapterView<*>) {}
         }
 
         botonBusqueda.setOnClickListener {
-            // Obtener el tipo de búsqueda (refugios o veterinarios) desde el spinner
             val tipoBusqueda = spinner.selectedItem.toString()
-
-            // Limpiar las listas antes de hacer una nueva consulta
             centrosRList.clear()
             centrosVList.clear()
 
-            // Realizar la consulta correspondiente
             if (tipoBusqueda == "Refugios") {
                 db.child("centros").orderByChild("tipo").equalTo("refugio")
                     .addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            // Recorrer los resultados de la consulta
                             for (refSnapshot in snapshot.children) {
                                 val refugio = refSnapshot.getValue(Refugio::class.java)
                                 if (refugio != null) {
@@ -110,15 +101,12 @@ class Centros : Fragment() {
                             adapter.notifyDataSetChanged()
                         }
 
-                        override fun onCancelled(error: DatabaseError) {
-                            // Manejar error si lo deseas
-                        }
+                        override fun onCancelled(error: DatabaseError) {}
                     })
-            } else if (tipoBusqueda == "Veterinarios") {
+            } else {
                 db.child("centros").orderByChild("tipo").equalTo("veterinario")
                     .addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            // Recorrer los resultados de la consulta
                             for (vetSnapshot in snapshot.children) {
                                 val veterinario = vetSnapshot.getValue(Veterinario::class.java)
                                 if (veterinario != null) {
@@ -128,13 +116,41 @@ class Centros : Fragment() {
                             adapter.notifyDataSetChanged()
                         }
 
-                        override fun onCancelled(error: DatabaseError) {
-                            // Manejar error si lo deseas
-                        }
+                        override fun onCancelled(error: DatabaseError) {}
                     })
             }
         }
 
         return view
+    }
+
+    private fun eliminarRefugio(refugio: Refugio) {
+        db.child("centros").orderByChild("nombre").equalTo(refugio.nombre)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (item in snapshot.children) {
+                        item.ref.removeValue()
+                    }
+                    centrosRList.remove(refugio)
+                    adapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+    }
+
+    private fun eliminarVeterinario(veterinario: Veterinario) {
+        db.child("centros").orderByChild("nombre").equalTo(veterinario.nombre)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (item in snapshot.children) {
+                        item.ref.removeValue()
+                    }
+                    centrosVList.remove(veterinario)
+                    adapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
     }
 }

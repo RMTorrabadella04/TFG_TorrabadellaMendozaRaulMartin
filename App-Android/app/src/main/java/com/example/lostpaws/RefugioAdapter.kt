@@ -12,7 +12,8 @@ import com.example.lostpaws.Data.Refugio
 class RefugioAdapter(
     private val context: Context,
     private val refugioList: List<Refugio>,
-    private val deleteListener: (Refugio) -> Unit
+    private val deleteListener: (Refugio) -> Unit,
+    private val showDeleteButton: Boolean = true
 ) : RecyclerView.Adapter<RefugioAdapter.RefugioViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RefugioViewHolder {
@@ -41,7 +42,13 @@ class RefugioAdapter(
             telefonoText.text = refugio.telefono
             emailText.text = refugio.email
             capacidadText.text = "${refugio.capacidad}"
-            deleteButton.setOnClickListener { deleteListener(refugio) }
+
+            if (showDeleteButton) {
+                deleteButton.visibility = View.VISIBLE
+                deleteButton.setOnClickListener { deleteListener(refugio) }
+            } else {
+                deleteButton.visibility = View.GONE
+            }
         }
     }
 }
