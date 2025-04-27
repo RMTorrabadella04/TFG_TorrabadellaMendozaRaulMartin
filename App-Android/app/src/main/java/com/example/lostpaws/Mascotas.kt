@@ -1,33 +1,19 @@
 package com.example.lostpaws
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [Mascotas.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Mascotas : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var fragmentChangeListener: OnFragmentChangeListener? = null
+    private lateinit var filtro: Spinner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,23 +23,37 @@ class Mascotas : Fragment() {
         return inflater.inflate(R.layout.fragment_mascotas, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Mascotas.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Mascotas().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        var botonAnyadir = view.findViewById<Button>(R.id.btnAnyadir)
+
+        botonAnyadir.setOnClickListener{
+
+            fragmentChangeListener?.onFragmentChange(AnyadirMascotas())
+
+        }
+
+        var botonBuscar = view.findViewById<Button>(R.id.btnBuscar)
+
+        filtro = view.findViewById(R.id.FiltroMascota)
+
+        val mascotas = listOf("Gato", "Perro", "Hamster", "Pajaro", "Conejo", "Otro")
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, mascotas)
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        filtro.adapter = adapter
+
     }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentChangeListener) {
+            fragmentChangeListener = context
+        }
+    }
+
+
 }

@@ -39,9 +39,8 @@ class MasterActivity : AppCompatActivity(), OnFragmentChangeListener  {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        // Reemplazar el fragmento actual con el nuevo fragmento
         fragmentTransaction.replace(R.id.fragment_container2, fragment)
-        fragmentTransaction.addToBackStack(null) // Agregar a la pila de retroceso si es necesario
+        fragmentTransaction.addToBackStack(null)
 
         fragmentTransaction.commit()
     }
