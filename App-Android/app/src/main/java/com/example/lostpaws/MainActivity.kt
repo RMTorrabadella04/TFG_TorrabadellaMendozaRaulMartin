@@ -1,6 +1,8 @@
 package com.example.lostpaws
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
@@ -39,8 +41,17 @@ class MainActivity : AppCompatActivity() {
 
         val btnInvitado = findViewById<Button>(R.id.invitado)
         btnInvitado.setOnClickListener {
-            // Crea un Intent para iniciar SecondActivity
-            Toast.makeText(this, "La función de Invitado estara disponible proximamente", Toast.LENGTH_SHORT).show()
+            guardarSesion("invitado", applicationContext)
+            val intent = Intent(this, InvitadoActivity::class.java)
+            startActivity(intent)
         }
     }
+
+    fun guardarSesion(email: String, context: Context) {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences("Sesion", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("email", email) // Guardamos el email
+        editor.apply() // Aplicamos los cambios
+    }
+
 }

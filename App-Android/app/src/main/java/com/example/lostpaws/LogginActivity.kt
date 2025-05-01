@@ -107,6 +107,7 @@ class LogginActivity : AppCompatActivity() {
     }
 }
 
+
 fun guardarSesion(email: String, context: Context) {
     val sharedPreferences: SharedPreferences = context.getSharedPreferences("Sesion", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()

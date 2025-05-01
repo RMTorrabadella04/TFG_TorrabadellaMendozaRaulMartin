@@ -59,6 +59,7 @@
         app:layout_constraintGuide_begin="82dp" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recicleviewmascota"
         android:layout_width="412dp"
         android:layout_height="644dp"
         app:layout_constraintBottom_toBottomOf="parent"
