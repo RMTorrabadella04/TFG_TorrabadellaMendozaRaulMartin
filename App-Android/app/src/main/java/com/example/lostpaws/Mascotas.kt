@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import android.app.DatePickerDialog
 import android.widget.CheckBox
+import com.example.lostpaws.Data.Centro
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.text.SimpleDateFormat
@@ -53,7 +54,8 @@ class Mascotas : Fragment() {
             mascotaList,
             { mascota -> editarMascota(mascota) },
             { mascota -> eliminarMascota(mascota) },
-            { mascota -> darPerdidaMascota(mascota) }
+            { mascota -> darPerdidaMascota(mascota) },
+            { mascota -> abandonarMascota(mascota) }
         )
 
         recyclerView.adapter = adapter
@@ -182,6 +184,31 @@ class Mascotas : Fragment() {
     }
 
     private fun darPerdidaMascota(mascota: Mascota) {
+        val perdidaRef = FirebaseDatabase.getInstance().getReference("perdida")
+
+        // Buscar si ya existe un reporte de pérdida para esta mascota
+        perdidaRef.orderByChild("mascotaId").equalTo(mascota.id)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        // Ya está marcada como perdida, así que eliminamos el reporte
+                        for (child in snapshot.children) {
+                            child.ref.removeValue()
+                        }
+                        Toast.makeText(requireContext(), "Reporte de pérdida eliminado", Toast.LENGTH_SHORT).show()
+                    } else {
+                        mostrarDialogoReportePerdida(mascota)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(requireContext(), "Error al consultar el estado de pérdida", Toast.LENGTH_SHORT).show()
+                }
+            })
+    }
+
+
+    private fun mostrarDialogoReportePerdida(mascota: Mascota) {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_reporte_perdida, null)
 
         // Referencias a los elementos del dialog
@@ -308,8 +335,7 @@ class Mascotas : Fragment() {
             "telefonoContacto" to telefono,
             "hayRecompensa" to hayRecompensa,
             "recompensa" to recompensa,
-            "userEmail" to getUserEmail(),
-            "estado" to "PERDIDO" // Estado inicial del reporte
+            "userEmail" to getUserEmail()
         )
 
 
@@ -322,6 +348,131 @@ class Mascotas : Fragment() {
                 Toast.makeText(requireContext(), "Error al reportar: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
+    private fun abandonarMascota(mascota: Mascota) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_reporte_abandono, null)
+
+        val editTextFecha = dialogView.findViewById<TextInputEditText>(R.id.editTextFechaPerdida)
+        val spinnerRefugios = dialogView.findViewById<Spinner>(R.id.spinerRefugios)
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelar)
+        val btnReportar = dialogView.findViewById<Button>(R.id.btnReportar)
+
+        val calendar = Calendar.getInstance()
+        editTextFecha.setOnClickListener {
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                { _, year, month, dayOfMonth ->
+                    calendar.set(Calendar.YEAR, year)
+                    calendar.set(Calendar.MONTH, month)
+                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                    val formato = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    editTextFecha.setText(formato.format(calendar.time))
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.show()
+        }
+
+        val refugiosList = mutableListOf<Pair<String, Centro>>()  // Pair<id, objeto>
+        val nombresRefugios = mutableListOf<String>()
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, nombresRefugios)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerRefugios.adapter = adapter
+
+        FirebaseDatabase.getInstance().getReference("centros")
+            .orderByChild("tipo").equalTo("refugio")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    refugiosList.clear()
+                    nombresRefugios.clear()
+
+                    for (snap in snapshot.children) {
+                        val id = snap.key ?: continue
+                        val centro = snap.getValue(Centro::class.java) ?: continue
+                        refugiosList.add(Pair(id, centro))
+                        nombresRefugios.add(centro.nombre)
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Toast.makeText(requireContext(), "Error al cargar refugios", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        btnCancelar.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        btnReportar.setOnClickListener {
+            if (editTextFecha.text.isNullOrEmpty()) {
+                editTextFecha.error = "La fecha es obligatoria"
+                return@setOnClickListener
+            }
+
+            if (refugiosList.isEmpty() || spinnerRefugios.selectedItemPosition == -1) {
+                Toast.makeText(requireContext(), "Seleccione un refugio", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val fecha = editTextFecha.text.toString()
+            val (refugioId, _) = refugiosList[spinnerRefugios.selectedItemPosition]
+
+            guardarReporteAbandono(mascota, fecha, refugioId)
+
+            alertDialog.dismiss()
+        }
+
+        alertDialog.show()
+    }
+
+
+    private fun guardarReporteAbandono(
+        mascota: Mascota,
+        fecha: String,
+        refugioId: String
+    ) {
+        val abandonoRef = FirebaseDatabase.getInstance().getReference("abandonos")
+        val abandonoId = abandonoRef.push().key
+
+        if (abandonoId == null) {
+            Toast.makeText(requireContext(), "Error al generar ID del reporte", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val reporteMap = hashMapOf(
+            "mascotaId" to mascota.id,
+            "mascotaNombre" to mascota.nombre,
+            "mascotaTipo" to mascota.tipo,
+            "mascotaRaza" to mascota.raza,
+            "mascotaChip" to mascota.chip,
+            "mascotaFoto" to mascota.foto,
+            "fechaReporte" to getCurrentDateTime(),
+            "fechaAbandono" to fecha,
+            "refugioId" to refugioId,
+            "userEmail" to getUserEmail()
+        )
+
+        abandonoRef.child(abandonoId).setValue(reporteMap)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Mascota reportada como abandonada", Toast.LENGTH_SHORT).show()
+                eliminarMascota(mascota)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Error al reportar abandono: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
 
     // Función auxiliar para obtener la fecha y hora actual formateada
     private fun getCurrentDateTime(): String {

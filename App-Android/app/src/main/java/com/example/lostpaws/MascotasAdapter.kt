@@ -9,13 +9,15 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.*
 
 class MascotasAdapter(
     private val context: Context,
     private val mascotasList: List<Mascota>,
     private val editListener: (Mascota) -> Unit,
     private val deleteListener: (Mascota) -> Unit,
-    private val darPerdidoListener: (Mascota) -> Unit
+    private val darPerdidoListener: (Mascota) -> Unit,
+    private val abandonarListener: (Mascota) -> Unit
 ) : RecyclerView.Adapter<MascotasAdapter.MascotaViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MascotaViewHolder {
@@ -28,9 +30,7 @@ class MascotasAdapter(
         holder.bind(mascota, editListener, deleteListener, darPerdidoListener)
     }
 
-    override fun getItemCount(): Int {
-        return mascotasList.size
-    }
+    override fun getItemCount(): Int = mascotasList.size
 
     inner class MascotaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -44,6 +44,7 @@ class MascotasAdapter(
         private val editarButton: Button = itemView.findViewById(R.id.btnEditar)
         private val eliminarButton: Button = itemView.findViewById(R.id.btnEliminar)
         private val darPorPerdidoButton: Button = itemView.findViewById(R.id.btnDarPerdido)
+        private val abandonarButton: Button = itemView.findViewById(R.id.btnAbandonar)
 
         fun bind(
             mascota: Mascota,
@@ -51,7 +52,7 @@ class MascotasAdapter(
             deleteListener: (Mascota) -> Unit,
             darPerdidoListener: (Mascota) -> Unit
         ) {
-
+            // Asigna datos
             val resourceId = when (mascota.foto) {
                 "gato.png" -> R.drawable.gato
                 "perro.png" -> R.drawable.perro
@@ -61,7 +62,6 @@ class MascotasAdapter(
                 else -> R.drawable.pinguinoilerna
             }
             imgMascota.setImageResource(resourceId)
-
             mascotaIdTextView.text = mascota.id
             mascotaNombreTextView.text = mascota.nombre
             mascotaTipoTextView.text = mascota.tipo
@@ -69,16 +69,26 @@ class MascotasAdapter(
             mascotaChipTextView.text = mascota.chip.capitalize()
             mascotaVacunasTextView.text = mascota.vacunas
 
-            editarButton.setOnClickListener {
-                editListener(mascota)
-            }
+            // Ajusta texto inicial del botón según si existe reporte en Firebase
+            val perdidaRef = FirebaseDatabase.getInstance().getReference("perdida")
+            perdidaRef.orderByChild("mascotaId").equalTo(mascota.id)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        darPorPerdidoButton.text = if (snapshot.exists()) "CANCELAR REPORTE" else "DAR POR PERDIDO"
+                    }
+                    override fun onCancelled(error: DatabaseError) { /* Ignorar error */ }
+                })
 
-            eliminarButton.setOnClickListener {
-                deleteListener(mascota)
-            }
-
+            // Listeners
+            editarButton.setOnClickListener { editListener(mascota) }
+            eliminarButton.setOnClickListener { deleteListener(mascota) }
             darPorPerdidoButton.setOnClickListener {
                 darPerdidoListener(mascota)
+                val nuevoTexto = if (darPorPerdidoButton.text == "DAR POR PERDIDO") "CANCELAR REPORTE" else "DAR POR PERDIDO"
+                darPorPerdidoButton.text = nuevoTexto
+            }
+            abandonarButton.setOnClickListener{
+                abandonarListener(mascota)
             }
         }
     }
