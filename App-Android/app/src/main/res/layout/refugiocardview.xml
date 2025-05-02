@@ -9,14 +9,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
 
         <!-- Nombre -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
@@ -34,8 +34,8 @@
 
         <!-- Dirección -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
@@ -53,8 +53,8 @@
 
         <!-- Teléfono -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
@@ -72,8 +72,8 @@
 
         <!-- Email -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
@@ -91,8 +91,8 @@
 
         <!-- Capacidad -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"

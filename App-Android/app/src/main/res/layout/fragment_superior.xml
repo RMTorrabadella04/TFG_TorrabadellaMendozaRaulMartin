@@ -27,21 +27,6 @@
         tools:ignore="HardcodedText"/>
 
     <ImageButton
-        android:id="@+id/btnNotificaciones"
-        android:layout_width="82dp"
-        android:layout_height="66dp"
-        android:backgroundTint="@android:color/transparent"
-        android:src="@drawable/notificaciones"
-        android:contentDescription="Notificaciones"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView3"
-        app:layout_constraintHorizontal_bias="0.29"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.625"
-        tools:ignore="HardcodedText" />
-
-    <ImageButton
         android:id="@+id/btnUsuario"
         android:layout_width="80dp"
         android:layout_height="66dp"

@@ -14,7 +14,8 @@ class MascotasAdapter(
     private val context: Context,
     private val mascotasList: List<Mascota>,
     private val editListener: (Mascota) -> Unit,
-    private val deleteListener: (Mascota) -> Unit
+    private val deleteListener: (Mascota) -> Unit,
+    private val darPerdidoListener: (Mascota) -> Unit
 ) : RecyclerView.Adapter<MascotasAdapter.MascotaViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MascotaViewHolder {
@@ -24,7 +25,7 @@ class MascotasAdapter(
 
     override fun onBindViewHolder(holder: MascotaViewHolder, position: Int) {
         val mascota = mascotasList[position]
-        holder.bind(mascota, editListener, deleteListener)
+        holder.bind(mascota, editListener, deleteListener, darPerdidoListener)
     }
 
     override fun getItemCount(): Int {
@@ -42,8 +43,14 @@ class MascotasAdapter(
         private val mascotaVacunasTextView: TextView = itemView.findViewById(R.id.textMascotaVacunas)
         private val editarButton: Button = itemView.findViewById(R.id.btnEditar)
         private val eliminarButton: Button = itemView.findViewById(R.id.btnEliminar)
+        private val darPorPerdidoButton: Button = itemView.findViewById(R.id.btnDarPerdido)
 
-        fun bind(mascota: Mascota, editListener: (Mascota) -> Unit, deleteListener: (Mascota) -> Unit) {
+        fun bind(
+            mascota: Mascota,
+            editListener: (Mascota) -> Unit,
+            deleteListener: (Mascota) -> Unit,
+            darPerdidoListener: (Mascota) -> Unit
+        ) {
 
             val resourceId = when (mascota.foto) {
                 "gato.png" -> R.drawable.gato
@@ -68,6 +75,10 @@ class MascotasAdapter(
 
             eliminarButton.setOnClickListener {
                 deleteListener(mascota)
+            }
+
+            darPorPerdidoButton.setOnClickListener {
+                darPerdidoListener(mascota)
             }
         }
     }

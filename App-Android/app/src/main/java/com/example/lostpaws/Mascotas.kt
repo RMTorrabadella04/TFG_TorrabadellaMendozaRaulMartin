@@ -15,15 +15,23 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
+import android.app.DatePickerDialog
+import android.widget.CheckBox
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class Mascotas : Fragment() {
 
+    private var db: DatabaseReference = FirebaseDatabase.getInstance().reference
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MascotasAdapter
     private val mascotaList = mutableListOf<Mascota>()
     private var fragmentChangeListener: OnFragmentChangeListener? = null
     private lateinit var filtro: Spinner
-    private lateinit var databaseReference: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +43,7 @@ class Mascotas : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("mascotas")
+        db = FirebaseDatabase.getInstance().getReference("mascotas")
 
         recyclerView = view.findViewById(R.id.recicleviewmascota)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -44,7 +52,8 @@ class Mascotas : Fragment() {
             requireContext(),
             mascotaList,
             { mascota -> editarMascota(mascota) },
-            { mascota -> eliminarMascota(mascota) }
+            { mascota -> eliminarMascota(mascota) },
+            { mascota -> darPerdidaMascota(mascota) }
         )
 
         recyclerView.adapter = adapter
@@ -71,7 +80,7 @@ class Mascotas : Fragment() {
     private fun cargarMascotas() {
         val userEmail = getUserEmail()
 
-        databaseReference.orderByChild("userEmail").equalTo(userEmail)
+        db.orderByChild("userEmail").equalTo(userEmail)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     mascotaList.clear()
@@ -109,7 +118,7 @@ class Mascotas : Fragment() {
 
         val userEmail = getUserEmail()
 
-        databaseReference.orderByChild("userEmail").equalTo(userEmail)
+        db.orderByChild("userEmail").equalTo(userEmail)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     mascotaList.clear()
@@ -163,7 +172,7 @@ class Mascotas : Fragment() {
     }
 
     private fun eliminarMascota(mascota: Mascota) {
-        databaseReference.child(mascota.id).removeValue()
+        db.child(mascota.id).removeValue()
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Mascota eliminada correctamente", Toast.LENGTH_SHORT).show()
             }
@@ -172,6 +181,153 @@ class Mascotas : Fragment() {
             }
     }
 
+    private fun darPerdidaMascota(mascota: Mascota) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_reporte_perdida, null)
+
+        // Referencias a los elementos del dialog
+        val editTextFecha = dialogView.findViewById<TextInputEditText>(R.id.editTextFechaPerdida)
+        val editTextLugar = dialogView.findViewById<TextInputEditText>(R.id.editTextLugarPerdida)
+        val editTextDescripcion = dialogView.findViewById<TextInputEditText>(R.id.editTextDescripcion)
+        val editTextTelefono = dialogView.findViewById<TextInputEditText>(R.id.editTextTelefono)
+        val checkBoxRecompensa = dialogView.findViewById<CheckBox>(R.id.checkBoxRecompensa)
+        val layoutRecompensa = dialogView.findViewById<TextInputLayout>(R.id.layoutRecompensa)
+        val editTextRecompensa = dialogView.findViewById<TextInputEditText>(R.id.editTextRecompensa)
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelar)
+        val btnReportar = dialogView.findViewById<Button>(R.id.btnReportar)
+
+        // Configurar fecha con DatePicker
+        val calendar = Calendar.getInstance()
+
+        editTextFecha.setOnClickListener {
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                { _, year, month, dayOfMonth ->
+                    calendar.set(Calendar.YEAR, year)
+                    calendar.set(Calendar.MONTH, month)
+                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    editTextFecha.setText(dateFormat.format(calendar.time))
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.show()
+        }
+
+        // Configurar checkbox de recompensa
+        checkBoxRecompensa.setOnCheckedChangeListener { _, isChecked ->
+            layoutRecompensa.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+
+        // Crear el diálogo
+        val alertDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        // Configurar botón Cancelar
+        btnCancelar.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        // Configurar botón Reportar
+        btnReportar.setOnClickListener {
+            // Validar campos
+            if (editTextFecha.text.isNullOrEmpty()) {
+                editTextFecha.error = "La fecha es obligatoria"
+                return@setOnClickListener
+            }
+
+            if (editTextLugar.text.isNullOrEmpty()) {
+                editTextLugar.error = "El lugar es obligatorio"
+                return@setOnClickListener
+            }
+
+            if (editTextTelefono.text.isNullOrEmpty()) {
+                editTextTelefono.error = "El teléfono de contacto es obligatorio"
+                return@setOnClickListener
+            }
+
+            if (checkBoxRecompensa.isChecked && editTextRecompensa.text.isNullOrEmpty()) {
+                editTextRecompensa.error = "Ingrese la cantidad de recompensa"
+                return@setOnClickListener
+            }
+
+            // Recopilar datos del formulario
+            val fecha = editTextFecha.text.toString()
+            val lugar = editTextLugar.text.toString()
+            val descripcion = editTextDescripcion.text.toString()
+            val telefono = editTextTelefono.text.toString()
+            val hayRecompensa = checkBoxRecompensa.isChecked
+            val recompensa = if (hayRecompensa) editTextRecompensa.text.toString() else "0"
+
+            // Guardar reporte en Firebase
+            guardarReportePerdida(mascota, fecha, lugar, descripcion, telefono, hayRecompensa, recompensa)
+
+            // Cerrar el diálogo
+            alertDialog.dismiss()
+        }
+
+        // Mostrar el diálogo
+        alertDialog.show()
+    }
+
+    private fun guardarReportePerdida(
+        mascota: Mascota,
+        fecha: String,
+        lugar: String,
+        descripcion: String,
+        telefono: String,
+        hayRecompensa: Boolean,
+        recompensa: String
+    ) {
+        // Crear un ID único para el reporte
+
+        val perdidaRef = FirebaseDatabase.getInstance().getReference().child("perdida")
+        val perdidaId = perdidaRef.push().key
+
+        if (perdidaId == null) {
+            Toast.makeText(requireContext(), "Error al generar ID del reporte", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Crear mapa con los datos del reporte
+        val reporteMap = hashMapOf(
+            "mascotaId" to mascota.id,
+            "mascotaNombre" to mascota.nombre,
+            "mascotaTipo" to mascota.tipo,
+            "mascotaRaza" to mascota.raza,
+            "mascotaChip" to mascota.chip,
+            "mascotaFoto" to mascota.foto,
+            "fechaReporte" to getCurrentDateTime(),
+            "fechaPerdida" to fecha,
+            "lugarPerdida" to lugar,
+            "descripcion" to descripcion,
+            "telefonoContacto" to telefono,
+            "hayRecompensa" to hayRecompensa,
+            "recompensa" to recompensa,
+            "userEmail" to getUserEmail(),
+            "estado" to "PERDIDO" // Estado inicial del reporte
+        )
+
+
+        // Guardar reporte en Firebase
+        perdidaRef.child(perdidaId).setValue(reporteMap)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Mascota reportada como perdida", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Error al reportar: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    // Función auxiliar para obtener la fecha y hora actual formateada
+    private fun getCurrentDateTime(): String {
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

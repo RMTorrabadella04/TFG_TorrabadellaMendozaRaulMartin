@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -25,8 +25,8 @@
 
         <!-- ID -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
@@ -44,8 +44,8 @@
 
         <!-- Nombre -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
@@ -63,8 +63,8 @@
 
         <!-- Tipo -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
@@ -82,8 +82,8 @@
 
         <!-- Raza -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
@@ -101,8 +101,8 @@
 
         <!-- Chip -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
@@ -120,8 +120,8 @@
 
         <!-- Vacunas -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
@@ -140,15 +140,15 @@
         <!-- Botones -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_marginTop="8dp"
             android:gravity="center">
 
             <Button
                 android:id="@+id/btnEditar"
-                android:layout_width="135dp"
-                android:layout_height="wrap_content"
+                android:layout_width="114dp"
+                android:layout_height="56dp"
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="@color/verde_boton"
                 android:text="EDITAR"
@@ -156,9 +156,20 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/btnEliminar"
-                android:layout_width="135dp"
+                android:id="@+id/btnDarPerdido"
+                android:layout_width="114dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/verde_boton"
+                android:text="DAR POR PERDIDO"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnEliminar"
+                android:layout_width="114dp"
+                android:layout_height="56dp"
                 android:backgroundTint="@color/verde_boton"
                 android:text="ELIMINAR"
                 android:textColor="@android:color/white"

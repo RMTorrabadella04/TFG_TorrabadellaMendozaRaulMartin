@@ -40,16 +40,16 @@
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.09165527" />
+        app:layout_constraintGuide_begin="67dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.91" />
+        app:layout_constraintGuide_end="65dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,10 +18,10 @@
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.090287276" />
+        app:layout_constraintGuide_begin="73dp" />
 
 
     <FrameLayout
@@ -35,10 +35,10 @@
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.85" />
+        app:layout_constraintGuide_end="109dp" />
 
     <Button
         android:id="@+id/btnAdminUsers"

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reportar mascota perdida"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Fecha de pérdida -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextFechaPerdida"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Fecha de pérdida"
+                android:focusable="false"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Lugar de pérdida -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextLugarPerdida"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Lugar donde se perdió"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Descripción -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Descripción adicional"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Información de contacto -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextTelefono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Teléfono de contacto"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Recompensa -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <CheckBox
+                android:id="@+id/checkBoxRecompensa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ofrecer recompensa" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutRecompensa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextRecompensa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Cantidad"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <!-- Botones -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btnCancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@android:color/darker_gray"
+                android:text="CANCELAR"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btnReportar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/verde_boton"
+                android:text="REPORTAR"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

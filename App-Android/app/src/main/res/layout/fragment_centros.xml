@@ -11,10 +11,10 @@
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineMid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="552dp" />
+        app:layout_constraintGuide_end="499dp" />
 
 
     <Spinner
@@ -46,10 +46,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/centroList"
-        android:layout_width="414dp"
-        android:layout_height="550dp"
+        android:layout_width="397dp"
+        android:layout_height="480dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineMid" />
 
