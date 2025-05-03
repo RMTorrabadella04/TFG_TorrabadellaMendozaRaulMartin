@@ -43,7 +43,7 @@
         app:layout_constraintGuide_end="612dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recicleviewmascota"
+        android:id="@+id/recicleviewperdidos"
         android:layout_width="411dp"
         android:layout_height="601dp"
         app:layout_constraintBottom_toBottomOf="parent"

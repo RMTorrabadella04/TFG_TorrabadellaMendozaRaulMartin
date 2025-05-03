@@ -1,28 +1,12 @@
 package com.example.lostpaws
 
-import Data.UsuarioVistaAdmin
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Spinner
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.lostpaws.Data.Refugio
-import com.example.lostpaws.Data.Veterinario
-import com.google.firebase.database.*
 
 class AdminCentrosActivity : AppCompatActivity() {
 

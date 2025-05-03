@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="6dp"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Imagen de la mascota -->
+        <ImageView
+            android:id="@+id/imgMascota"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/pinguinoilerna" />
+
+        <!-- ID -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID: "
+                android:textStyle="bold"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textMascotaId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Nombre -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre: "
+                android:textStyle="bold"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textMascotaNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Firulais"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Tipo -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tipo: "
+                android:textStyle="bold"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textMascotaTipo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Perro"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Raza -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Raza: "
+                android:textStyle="bold"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textMascotaRaza"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Labrador"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Chip -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chip: "
+                android:textStyle="bold"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textMascotaChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sí"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Fecha de abandono -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha de abandono: "
+                android:textStyle="bold"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textFechaAbandono"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01/05/2025"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Fecha de reporte -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha de reporte: "
+                android:textStyle="bold"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textFechaReporte"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="03/05/2025"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Refugio ID -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID Refugio: "
+                android:textStyle="bold"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textRefugioId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R001"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Botón de CONTACTAR -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnContactar"
+                android:layout_width="200dp"
+                android:layout_height="56dp"
+                android:backgroundTint="@color/verde_boton"
+                android:text="CONTACTAR"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
