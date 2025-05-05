@@ -29,12 +29,6 @@ class Perdidos : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private val perdidosList = mutableListOf<Perdida>()
     private lateinit var adapter: PerdidosAdapter
-    private var userId: String? = null
-    private var userName: String? = null
-    private var userEmail: String? = null
-    private var duenyoId: String? = null
-    private var duenyoName: String? = null
-    private var duenyoEmail: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
