@@ -12,5 +12,6 @@ data class Perdida(
     val descripcion: String,
     val telefonoContacto: String,
     val hayRecompensa: Boolean,
+    val duenyo: String,
     val recompensa: String
 )

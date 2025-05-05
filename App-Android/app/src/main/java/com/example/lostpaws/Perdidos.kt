@@ -2,6 +2,8 @@ package com.example.lostpaws
 
 import Data.Mascota
 import Data.Perdida
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -64,6 +66,12 @@ class Perdidos : Fragment() {
         }
     }
 
+    private fun obtenerSesion(context: Context): String? {
+        val sharedPreferences: SharedPreferences = context.getSharedPreferences("Sesion", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("email", null) // Devuelve el email guardado o null si no está presente
+    }
+
+
     private fun cargarPerdidos() {
         db.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -82,9 +90,10 @@ class Perdidos : Fragment() {
                     val telefonoContacto = perdidaSnapshot.child("telefonoContacto").getValue(String::class.java) ?: ""
                     val hayRecompensa = perdidaSnapshot.child("hayRecompensa").getValue(Boolean::class.java) ?: false
                     val recompensa = perdidaSnapshot.child("recompensa").getValue(String::class.java) ?: ""
+                    val duenyo = perdidaSnapshot.child("userEmail").getValue(String::class.java) ?: ""
 
                     val perdida = Perdida(id, nombre, tipo, raza, chip, foto, fechaPerdida, lugarPerdida,
-                        descripcion, telefonoContacto, hayRecompensa, recompensa)
+                        descripcion, telefonoContacto, hayRecompensa, duenyo, recompensa)
                     perdidosList.add(perdida)
                 }
 
@@ -124,9 +133,10 @@ class Perdidos : Fragment() {
                         val telefonoContacto = perdidaSnapshot.child("telefonoContacto").getValue(String::class.java) ?: ""
                         val hayRecompensa = perdidaSnapshot.child("hayRecompensa").getValue(Boolean::class.java) ?: false
                         val recompensa = perdidaSnapshot.child("recompensa").getValue(String::class.java) ?: ""
+                        val duenyo = perdidaSnapshot.child("userEmail").getValue(String::class.java) ?: ""
 
                         val perdida = Perdida(id, nombre, tipo, raza, chip, foto, fechaPerdida, lugarPerdida,
-                            descripcion, telefonoContacto, hayRecompensa, recompensa)
+                            descripcion, telefonoContacto, hayRecompensa, duenyo, recompensa)
                         perdidosList.add(perdida)
                     }
                 }
@@ -141,6 +151,79 @@ class Perdidos : Fragment() {
     }
 
     private fun contactar(perdida: Perdida){
+
+        val relacionDuenyoUsuario = FirebaseDatabase.getInstance().getReference().child("relacionChats")
+        val relacionDuenyoUsuarioId = relacionDuenyoUsuario.push().key
+
+        if (relacionDuenyoUsuarioId == null) {
+            Toast.makeText(requireContext(), "Error al generar ID del reporte", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        var userId: String? = null
+        var userName: String?= null
+        var userEmail: String? = obtenerSesion(requireContext())
+
+        val database = FirebaseDatabase.getInstance().getReference("users")
+        database.orderByChild("email").equalTo(userEmail).addListenerForSingleValueEvent(object :
+            ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    for (userSnapshot in snapshot.children) {
+                        userId = userSnapshot.key // UID del usuario
+                        userName = userSnapshot.child("name").getValue(String::class.java)
+                        userEmail = userSnapshot.child("email").getValue(String::class.java)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(requireContext(), "Error en la base de datos", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        var duenyoId: String? = null
+        var duenyoName: String?= null
+        var duenyoEmail: String? = perdida.duenyo
+
+        val database2 = FirebaseDatabase.getInstance().getReference("users")
+        database2.orderByChild("email").equalTo(duenyoEmail).addListenerForSingleValueEvent(object :
+            ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    for (userSnapshot in snapshot.children) {
+                        duenyoId = userSnapshot.key // UID del usuario
+                        duenyoName = userSnapshot.child("name").getValue(String::class.java)
+                        duenyoEmail = userSnapshot.child("email").getValue(String::class.java)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(requireContext(), "Error en la base de datos", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        val reporteMap = hashMapOf(
+
+            "usuarioId" to userId,
+            "usuarioName" to userName,
+            "usuarioEmail" to userEmail,
+            "duenyoId" to duenyoId,
+            "duenyoName" to duenyoName,
+            "duenyoEmail" to duenyoEmail,
+
+        )
+
+        relacionDuenyoUsuario.child(relacionDuenyoUsuarioId).setValue(reporteMap)
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Mascota reportada como perdida", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Error al reportar: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+
         Toast.makeText(requireContext(), "Contactando al dueño de ${perdida.nombre}", Toast.LENGTH_SHORT).show()
     }
+
 }
