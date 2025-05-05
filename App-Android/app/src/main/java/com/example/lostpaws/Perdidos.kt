@@ -29,6 +29,12 @@ class Perdidos : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private val perdidosList = mutableListOf<Perdida>()
     private lateinit var adapter: PerdidosAdapter
+    private var userId: String? = null
+    private var userName: String? = null
+    private var userEmail: String? = null
+    private var duenyoId: String? = null
+    private var duenyoName: String? = null
+    private var duenyoEmail: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -150,80 +156,94 @@ class Perdidos : Fragment() {
         })
     }
 
-    private fun contactar(perdida: Perdida){
+    private fun contactar(perdida: Perdida) {
+        val userEmail = obtenerSesion(requireContext())
+        val duenyoEmail = perdida.duenyo
 
+        // Primero obtenemos información del usuario actual
+        val userDatabase = FirebaseDatabase.getInstance().getReference("users")
+        userDatabase.orderByChild("email").equalTo(userEmail).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(userSnapshot: DataSnapshot) {
+                if (userSnapshot.exists()) {
+                    var userId: String? = null
+                    var userName: String? = null
+
+                    for (currentUserSnapshot in userSnapshot.children) {
+                        userId = currentUserSnapshot.key
+                        userName = currentUserSnapshot.child("name").getValue(String::class.java)
+                    }
+
+                    if (userId != null && userName != null) {
+                        // Ahora obtenemos información del dueño
+                        val ownerDatabase = FirebaseDatabase.getInstance().getReference("users")
+                        ownerDatabase.orderByChild("email").equalTo(duenyoEmail).addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(ownerSnapshot: DataSnapshot) {
+                                if (ownerSnapshot.exists()) {
+                                    var duenyoId: String? = null
+                                    var duenyoName: String? = null
+
+                                    for (currentOwnerSnapshot in ownerSnapshot.children) {
+                                        duenyoId = currentOwnerSnapshot.key
+                                        duenyoName = currentOwnerSnapshot.child("name").getValue(String::class.java)
+                                    }
+
+                                    if (duenyoId != null && duenyoName != null) {
+                                        // Ahora que tenemos ambos conjuntos de datos, creamos la relación
+                                        crearRelacionChat(userId, userName, userEmail, duenyoId, duenyoName, duenyoEmail)
+                                    } else {
+                                        Toast.makeText(requireContext(), "No se pudo obtener la información del dueño", Toast.LENGTH_SHORT).show()
+                                    }
+                                } else {
+                                    Toast.makeText(requireContext(), "No se encontró el dueño en la base de datos", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                Toast.makeText(requireContext(), "Error al buscar dueño: ${error.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        })
+                    } else {
+                        Toast.makeText(requireContext(), "No se pudo obtener tu información de usuario", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "No se encontró tu usuario en la base de datos", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(requireContext(), "Error en la base de datos: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun crearRelacionChat(userId: String, userName: String, userEmail: String?,
+                                  duenyoId: String, duenyoName: String, duenyoEmail: String?) {
         val relacionDuenyoUsuario = FirebaseDatabase.getInstance().getReference().child("relacionChats")
         val relacionDuenyoUsuarioId = relacionDuenyoUsuario.push().key
 
         if (relacionDuenyoUsuarioId == null) {
-            Toast.makeText(requireContext(), "Error al generar ID del reporte", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Error al generar ID de la relación", Toast.LENGTH_SHORT).show()
             return
         }
 
-        var userId: String? = null
-        var userName: String?= null
-        var userEmail: String? = obtenerSesion(requireContext())
-
-        val database = FirebaseDatabase.getInstance().getReference("users")
-        database.orderByChild("email").equalTo(userEmail).addListenerForSingleValueEvent(object :
-            ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    for (userSnapshot in snapshot.children) {
-                        userId = userSnapshot.key // UID del usuario
-                        userName = userSnapshot.child("name").getValue(String::class.java)
-                        userEmail = userSnapshot.child("email").getValue(String::class.java)
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(requireContext(), "Error en la base de datos", Toast.LENGTH_SHORT).show()
-            }
-        })
-
-        var duenyoId: String? = null
-        var duenyoName: String?= null
-        var duenyoEmail: String? = perdida.duenyo
-
-        val database2 = FirebaseDatabase.getInstance().getReference("users")
-        database2.orderByChild("email").equalTo(duenyoEmail).addListenerForSingleValueEvent(object :
-            ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    for (userSnapshot in snapshot.children) {
-                        duenyoId = userSnapshot.key // UID del usuario
-                        duenyoName = userSnapshot.child("name").getValue(String::class.java)
-                        duenyoEmail = userSnapshot.child("email").getValue(String::class.java)
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(requireContext(), "Error en la base de datos", Toast.LENGTH_SHORT).show()
-            }
-        })
-
         val reporteMap = hashMapOf(
-
             "usuarioId" to userId,
             "usuarioName" to userName,
             "usuarioEmail" to userEmail,
+            "usuarioTipo" to "Usuario",
             "duenyoId" to duenyoId,
             "duenyoName" to duenyoName,
             "duenyoEmail" to duenyoEmail,
-
+            "duenyoTipo" to "Usuario"
         )
 
         relacionDuenyoUsuario.child(relacionDuenyoUsuarioId).setValue(reporteMap)
             .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Mascota reportada como perdida", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Contacto establecido con éxito", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Error al reportar: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error al establecer contacto: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-
-        Toast.makeText(requireContext(), "Contactando al dueño de ${perdida.nombre}", Toast.LENGTH_SHORT).show()
     }
 
 }
