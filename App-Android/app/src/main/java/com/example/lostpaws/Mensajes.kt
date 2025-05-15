@@ -140,13 +140,28 @@ class Mensajes : Fragment() {
             return
         }
 
-        // Estructura ejemplo para guardar un mensaje
-        val mensaje = hashMapOf(
-            "texto" to textoMensaje,
-            "emisorId" to usuarioId,
-            "emisorNombre" to usuarioNombre,
-            "timestamp" to ServerValue.TIMESTAMP
-        )
+        var mensaje: HashMap<String, Any?>? = null
+
+        if (currentEmail == duenyoEmail) {
+            mensaje = hashMapOf(
+                "texto" to textoMensaje,
+                "emisorId" to duenyoId,
+                "emisorNombre" to duenyoNombre,
+                "destinatarioId" to usuarioId,
+                "destinatarioNombre" to usuarioNombre,
+                "timestamp" to ServerValue.TIMESTAMP
+            )
+        } else {
+            // Si el usuario actual es el usuario, mostrar información del dueño
+            mensaje = hashMapOf(
+                "texto" to textoMensaje,
+                "emisorId" to usuarioId,
+                "emisorNombre" to usuarioNombre,
+                "destinatarioId" to duenyoId,
+                "destinatarioNombre" to duenyoNombre,
+                "timestamp" to ServerValue.TIMESTAMP
+            )
+        }
 
         // Guardar mensaje en Firebase
         val nuevoMensajeRef = mensajesRef.push()
