@@ -1,6 +1,7 @@
 package Data
 
 data class Chat(
+    val id: String = "",
     val duenyoEmail: String = "",
     val duenyoId: String = "",
     val duenyoName: String = "",

@@ -15,6 +15,7 @@ import com.google.firebase.database.*
 
 class Chats : Fragment() {
 
+    private var fragmentChangeListener: OnFragmentChangeListener? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var chatsList: MutableList<Chat>
@@ -32,6 +33,10 @@ class Chats : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Obtener email del usuario actual
+        val sharedPreferences = requireContext().getSharedPreferences("Sesion", Context.MODE_PRIVATE)
+        val currentUserEmail = sharedPreferences.getString("email", "") ?: ""
+
         // Inicializar RecyclerView
         recyclerView = view.findViewById(R.id.recicleviewchat)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -43,13 +48,11 @@ class Chats : Fragment() {
         chatAdapter = ChatAdapter(
             requireContext(),
             chatsList,
-            { chat -> navegarAConversacion(chat) }
+            { chat -> navegarAConversacion(chat, currentUserEmail) }
         )
         recyclerView.adapter = chatAdapter
 
-        // Obtener email del usuario actual
-        val sharedPreferences = requireContext().getSharedPreferences("Sesion", Context.MODE_PRIVATE)
-        val currentUserEmail = sharedPreferences.getString("email", "") ?: ""
+
 
         if (currentUserEmail.isEmpty()) {
             Toast.makeText(requireContext(), "No se pudo obtener el email del usuario", Toast.LENGTH_SHORT).show()
@@ -105,20 +108,28 @@ class Chats : Fragment() {
         }
     }
 
-    private fun navegarAConversacion(chat: Chat) {
-        // Aquí deberías implementar la navegación a la conversación individual
-        // Por ejemplo, usando Navigation Component:
-        /*
-        val action = ChatsDirections.actionChatsToConversacion(
-            chat.duenyoId,
-            chat.usuarioId,
-            chat.duenyoName,
-            chat.usuarioName
-        )
-        findNavController().navigate(action)
-        */
+    private fun navegarAConversacion(chat: Chat, currentUserEmail: String) {
 
-        // O simplemente mostrar un Toast por ahora
+        val mensajesFragment = Mensajes.newInstance(
+            chatId = chat.id,
+            usuarioId = chat.usuarioId,
+            usuarioNombre = chat.usuarioName,
+            usuarioEmail= chat.usuarioEmail,
+            duenyoId = chat.duenyoId,
+            duenyoNombre = chat.duenyoName,
+            duenyoEmail= chat.duenyoEmail,
+            currentEmail= currentUserEmail
+        )
+
+        // Navegar al fragmento Mensajes
+        fragmentChangeListener?.onFragmentChange(mensajesFragment)
+
         Toast.makeText(requireContext(), "Chat seleccionado: ${chat.duenyoName} - ${chat.usuarioName}", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Asegúrate de que el Activity implementa el OnFragmentChangeListener
+        fragmentChangeListener = context as? OnFragmentChangeListener
     }
 }
