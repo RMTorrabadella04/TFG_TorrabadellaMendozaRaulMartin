@@ -1,5 +1,6 @@
 package com.example.lostpaws
 
+import Data.Mensaje
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -22,8 +23,9 @@ class Mensajes : Fragment() {
     private lateinit var editTextMensaje: EditText
     private lateinit var btnEnviar: Button
     private lateinit var textNombre: TextView
+    private lateinit var mensajesAdapter: MensajesAdapter
+    private val listaMensajes = mutableListOf<Mensaje>()
 
-    // Variables para almacenar los datos del chat
     private var usuarioId: String? = null
     private var usuarioNombre: String? = null
     private var usuarioEmail: String? = null
@@ -33,12 +35,9 @@ class Mensajes : Fragment() {
     private var currentEmail: String? = null
     private var chatId: String? = null
 
-
-    // Base de datos
     private lateinit var mensajesRef: DatabaseReference
 
     companion object {
-        // Método estático para crear una nueva instancia con parámetros
         fun newInstance(chatId: String, usuarioId: String, usuarioNombre: String, usuarioEmail: String,
                         duenyoId: String, duenyoNombre: String, duenyoEmail: String, currentEmail: String): Mensajes {
             val fragment = Mensajes()
@@ -58,7 +57,6 @@ class Mensajes : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Recuperar argumentos
         arguments?.let {
             chatId = it.getString("CHAT_ID")
             usuarioId = it.getString("USUARIO_ID")
@@ -75,10 +73,9 @@ class Mensajes : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_mensajes, container, false)
 
-        // Inicializar vistas
+
         recyclerViewMensajes = view.findViewById(R.id.recyclerViewMensajes)
         editTextMensaje = view.findViewById(R.id.editTextMensaje)
         btnEnviar = view.findViewById(R.id.btnEnviar)
@@ -90,7 +87,6 @@ class Mensajes : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         if (currentEmail == duenyoEmail) {
             // Si el usuario actual es el dueño, mostrar información del usuario
             textNombre.text = usuarioNombre ?: "Chat"
@@ -99,11 +95,14 @@ class Mensajes : Fragment() {
             textNombre.text = duenyoNombre ?: "Chat"
         }
 
-        // Configurar RecyclerView
-        recyclerViewMensajes.layoutManager = LinearLayoutManager(requireContext())
-        // Aquí necesitarías crear un adaptador para los mensajes
+        val layoutManager = LinearLayoutManager(requireContext())
+        layoutManager.stackFromEnd = true  // Para que los mensajes se vean desde abajo hacia arriba
+        recyclerViewMensajes.layoutManager = layoutManager
 
-        // Configurar referencia a Firebase para los mensajes
+        // Inicializar adaptador con el ID de usuario actual
+        mensajesAdapter = MensajesAdapter(requireContext(), listaMensajes)
+        recyclerViewMensajes.adapter = mensajesAdapter
+
         if (chatId != null) {
             mensajesRef = FirebaseDatabase.getInstance().getReference("mensajes").child(chatId!!)
             cargarMensajes()
@@ -111,7 +110,6 @@ class Mensajes : Fragment() {
             Toast.makeText(requireContext(), "Error: ID de chat no disponible", Toast.LENGTH_SHORT).show()
         }
 
-        // Configurar botón de enviar
         btnEnviar.setOnClickListener {
             enviarMensaje()
         }
@@ -123,11 +121,48 @@ class Mensajes : Fragment() {
     }
 
     private fun cargarMensajes() {
-        // Implementación para cargar mensajes desde Firebase
-        // Esta función deberá configurar un ValueEventListener para obtener
-        // los mensajes de la conversación específica
-    }
+        mensajesRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                listaMensajes.clear()
+                for (mensajeSnapshot in snapshot.children) {
+                    try {
+                        val id = mensajeSnapshot.key ?: ""
+                        val texto = mensajeSnapshot.child("texto").getValue(String::class.java) ?: ""
+                        val emisorId = mensajeSnapshot.child("emisorId").getValue(String::class.java) ?: ""
+                        val emisorNombre = mensajeSnapshot.child("emisorNombre").getValue(String::class.java) ?: ""
+                        val destinatarioId = mensajeSnapshot.child("destinatarioId").getValue(String::class.java) ?: ""
+                        val destinatarioNombre = mensajeSnapshot.child("destinatarioNombre").getValue(String::class.java) ?: ""
+                        val timestamp = mensajeSnapshot.child("timestamp").getValue(Long::class.java) ?: 0L
 
+                        val mensaje = Mensaje(
+                            id = id,
+                            texto = texto,
+                            emisorId = emisorId,
+                            emisorNombre = emisorNombre,
+                            destinatarioId = destinatarioId,
+                            destinatarioNombre = destinatarioNombre,
+                            timestamp = timestamp
+                        )
+                        listaMensajes.add(mensaje)
+                    } catch (e: Exception) {
+                        Log.e("Mensajes", "Error al procesar mensaje: ${e.message}")
+                    }
+                }
+
+                mensajesAdapter.notifyDataSetChanged()
+
+                // Hacer scroll al último mensaje si hay mensajes
+                if (listaMensajes.isNotEmpty()) {
+                    recyclerViewMensajes.scrollToPosition(listaMensajes.size - 1)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Mensajes", "Error al cargar mensajes: ${error.message}")
+                Toast.makeText(requireContext(), "Error al cargar mensajes: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
     private fun enviarMensaje() {
         val textoMensaje = editTextMensaje.text.toString().trim()
 
@@ -152,7 +187,6 @@ class Mensajes : Fragment() {
                 "timestamp" to ServerValue.TIMESTAMP
             )
         } else {
-            // Si el usuario actual es el usuario, mostrar información del dueño
             mensaje = hashMapOf(
                 "texto" to textoMensaje,
                 "emisorId" to usuarioId,
@@ -167,7 +201,6 @@ class Mensajes : Fragment() {
         val nuevoMensajeRef = mensajesRef.push()
         nuevoMensajeRef.setValue(mensaje)
             .addOnSuccessListener {
-                // Limpiar campo de texto
                 editTextMensaje.text.clear()
             }
             .addOnFailureListener { e ->
