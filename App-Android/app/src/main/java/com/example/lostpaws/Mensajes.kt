@@ -34,6 +34,7 @@ class Mensajes : Fragment() {
     private var duenyoEmail: String? = null
     private var currentEmail: String? = null
     private var chatId: String? = null
+    private var currentUserId: String? = null  // Add currentUserId variable
 
     private lateinit var mensajesRef: DatabaseReference
 
@@ -66,6 +67,9 @@ class Mensajes : Fragment() {
             duenyoNombre = it.getString("DUENYO_NOMBRE")
             duenyoEmail = it.getString("DUENYO_EMAIL")
             currentEmail = it.getString("CURRENT_EMAIL")
+
+            // Determine currentUserId based on email comparison
+            currentUserId = if (currentEmail == duenyoEmail) duenyoId else usuarioId
         }
     }
 
@@ -74,7 +78,6 @@ class Mensajes : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_mensajes, container, false)
-
 
         recyclerViewMensajes = view.findViewById(R.id.recyclerViewMensajes)
         editTextMensaje = view.findViewById(R.id.editTextMensaje)
@@ -100,8 +103,12 @@ class Mensajes : Fragment() {
         recyclerViewMensajes.layoutManager = layoutManager
 
         // Inicializar adaptador con el ID de usuario actual
-        mensajesAdapter = MensajesAdapter(requireContext(), listaMensajes)
-        recyclerViewMensajes.adapter = mensajesAdapter
+        currentUserId?.let {
+            mensajesAdapter = MensajesAdapter(requireContext(), listaMensajes, it)
+            recyclerViewMensajes.adapter = mensajesAdapter
+        } ?: run {
+            Toast.makeText(requireContext(), "Error: ID de usuario actual no disponible", Toast.LENGTH_SHORT).show()
+        }
 
         if (chatId != null) {
             mensajesRef = FirebaseDatabase.getInstance().getReference("mensajes").child(chatId!!)
@@ -117,7 +124,7 @@ class Mensajes : Fragment() {
         // Log para depuración
         Log.d("Mensajes", "Información del chat: " +
                 "ChatID=$chatId, UsuarioID=$usuarioId, UsuarioNombre=$usuarioNombre, " +
-                "DuenyoID=$duenyoId, DuenyoNombre=$duenyoNombre")
+                "DuenyoID=$duenyoId, DuenyoNombre=$duenyoNombre, CurrentUserId=$currentUserId")
     }
 
     private fun cargarMensajes() {
@@ -163,6 +170,7 @@ class Mensajes : Fragment() {
             }
         })
     }
+
     private fun enviarMensaje() {
         val textoMensaje = editTextMensaje.text.toString().trim()
 
@@ -207,5 +215,4 @@ class Mensajes : Fragment() {
                 Toast.makeText(requireContext(), "Error al enviar mensaje: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
-
 }

@@ -23,8 +23,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMensajes"
-        android:layout_width="411dp"
-        android:layout_height="609dp"
+        android:layout_width="409dp"
+        android:layout_height="578dp"
         android:background="@color/sinFondo"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,3 +1,4 @@
+
 package com.example.lostpaws
 
 import Data.Mensaje
@@ -7,18 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MensajesAdapter(
     private val context: Context,
     private val mensajes: List<Mensaje>,
+    private val currentUserId: String  // Add the currentUserId parameter
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_MENSAJE_ENVIADO = 1
@@ -46,19 +43,8 @@ class MensajesAdapter(
         }
     }
 
-    // Compara para ver quien envia el mensaje
-
     override fun getItemViewType(position: Int): Int {
         val mensaje = mensajes[position]
-
-        var currentEmail: String = getUserEmail()
-
-        var currentUserId: String = ""
-
-        obtenerDatosUsuario(currentEmail) { usuario ->
-            currentUserId=usuario
-        }
-
         return if (mensaje.emisorId == currentUserId) {
             VIEW_TYPE_MENSAJE_ENVIADO
         } else {
@@ -90,38 +76,4 @@ class MensajesAdapter(
         val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
         return sdf.format(Date(timestamp))
     }
-
-    // Uso esto para saber quien es el usuario actual y para ver quien es el que envio el mensaje para ponerle un layout de mensaje u otro
-
-    private fun getUserEmail(): String {
-        val sharedPreferences = context.getSharedPreferences("Sesion", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("email", "") ?: ""
-    }
-
-    private fun obtenerDatosUsuario(email: String, callback: (String) -> Unit) {
-        val database = FirebaseDatabase.getInstance().getReference("users")
-        database.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(object :
-            ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                var currentUserId: String = ""
-                if (snapshot.exists()) {
-                    for (userSnapshot in snapshot.children) {
-                        currentUserId = userSnapshot.key.toString()
-                        break
-                    }
-                    callback(currentUserId)
-                } else {
-                    callback("")
-                    Log.d("ObtenerDatosUsuario", "No se encontró usuario con email: $email")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(context, "Error en la base de datos: ${error.message}", Toast.LENGTH_SHORT).show()
-                callback("")
-                Log.e("ObtenerDatosUsuario", "Error al buscar usuario: ${error.message}")
-            }
-        })
-    }
-
 }

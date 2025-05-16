@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:background="@drawable/roundedcornerrecibido"
     android:padding="8dp"
+    android:layout_margin="12dp"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="80dp">
 
