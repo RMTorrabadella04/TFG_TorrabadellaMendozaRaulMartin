@@ -4,27 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/amarillo_fondo"
     tools:context=".Mensajes">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="50dp" />
+        app:layout_constraintGuide_end="639dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         app:layout_constraintGuide_end="75dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewMensajes"
-        android:layout_width="409dp"
-        android:layout_height="578dp"
+        android:layout_width="407dp"
+        android:layout_height="531dp"
         android:background="@color/sinFondo"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
@@ -67,12 +66,13 @@
 
     <TextView
         android:id="@+id/textNombre"
-        android:layout_width="262dp"
-        android:layout_height="44dp"
-        android:text="Nombre"
-        android:textStyle="bold"
-        android:textSize="16dp"
+        android:layout_width="181dp"
+        android:layout_height="33dp"
         android:gravity="center_vertical|center_horizontal"
+        android:text="Nombre"
+        android:layout_margin="10dp"
+        android:textSize="16dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
