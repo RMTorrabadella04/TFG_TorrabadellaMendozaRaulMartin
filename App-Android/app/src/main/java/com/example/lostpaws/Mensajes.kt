@@ -34,9 +34,10 @@ class Mensajes : Fragment() {
     private var duenyoEmail: String? = null
     private var currentEmail: String? = null
     private var chatId: String? = null
-    private var currentUserId: String? = null  // Add currentUserId variable
+    private var currentUserId: String? = null
 
     private lateinit var mensajesRef: DatabaseReference
+    private lateinit var valueEventListener: ValueEventListener
 
     companion object {
         fun newInstance(chatId: String, usuarioId: String, usuarioNombre: String, usuarioEmail: String,
@@ -111,7 +112,12 @@ class Mensajes : Fragment() {
         }
 
         if (chatId != null) {
+            // Usa la estructura actual de Firebase pero asegúrate de usar el chatId correcto
             mensajesRef = FirebaseDatabase.getInstance().getReference("mensajes").child(chatId!!)
+
+            // Depuración - Confirma la ruta de la base de datos que se está usando
+            Log.d("Mensajes", "Ruta de Firebase: ${mensajesRef.path}")
+
             cargarMensajes()
         } else {
             Toast.makeText(requireContext(), "Error: ID de chat no disponible", Toast.LENGTH_SHORT).show()
@@ -128,9 +134,22 @@ class Mensajes : Fragment() {
     }
 
     private fun cargarMensajes() {
-        mensajesRef.addValueEventListener(object : ValueEventListener {
+        // Primero elimina cualquier listener existente para evitar duplicación
+        if (::valueEventListener.isInitialized) {
+            mensajesRef.removeEventListener(valueEventListener)
+        }
+
+        valueEventListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 listaMensajes.clear()
+
+                // Verificar si hay datos
+                if (!snapshot.exists()) {
+                    Log.d("Mensajes", "No hay mensajes para este chatId: $chatId")
+                    mensajesAdapter.notifyDataSetChanged()
+                    return
+                }
+
                 for (mensajeSnapshot in snapshot.children) {
                     try {
                         val id = mensajeSnapshot.key ?: ""
@@ -141,20 +160,32 @@ class Mensajes : Fragment() {
                         val destinatarioNombre = mensajeSnapshot.child("destinatarioNombre").getValue(String::class.java) ?: ""
                         val timestamp = mensajeSnapshot.child("timestamp").getValue(Long::class.java) ?: 0L
 
-                        val mensaje = Mensaje(
-                            id = id,
-                            texto = texto,
-                            emisorId = emisorId,
-                            emisorNombre = emisorNombre,
-                            destinatarioId = destinatarioId,
-                            destinatarioNombre = destinatarioNombre,
-                            timestamp = timestamp
-                        )
-                        listaMensajes.add(mensaje)
+                        // Verificar que el mensaje pertenece a esta conversación (usuario y dueño)
+                        if ((emisorId == usuarioId && destinatarioId == duenyoId) ||
+                            (emisorId == duenyoId && destinatarioId == usuarioId)) {
+
+                            val mensaje = Mensaje(
+                                id = id,
+                                texto = texto,
+                                emisorId = emisorId,
+                                emisorNombre = emisorNombre,
+                                destinatarioId = destinatarioId,
+                                destinatarioNombre = destinatarioNombre,
+                                timestamp = timestamp
+                            )
+
+                            listaMensajes.add(mensaje)
+                            Log.d("Mensajes", "Mensaje añadido: $texto, De: $emisorNombre, Para: $destinatarioNombre")
+                        } else {
+                            Log.d("Mensajes", "Mensaje filtrado: $texto (no pertenece a esta conversación)")
+                        }
                     } catch (e: Exception) {
                         Log.e("Mensajes", "Error al procesar mensaje: ${e.message}")
                     }
                 }
+
+                // Ordenar los mensajes por timestamp
+                listaMensajes.sortBy { it.timestamp }
 
                 mensajesAdapter.notifyDataSetChanged()
 
@@ -162,13 +193,17 @@ class Mensajes : Fragment() {
                 if (listaMensajes.isNotEmpty()) {
                     recyclerViewMensajes.scrollToPosition(listaMensajes.size - 1)
                 }
+
+                Log.d("Mensajes", "Total mensajes cargados: ${listaMensajes.size}")
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.e("Mensajes", "Error al cargar mensajes: ${error.message}")
                 Toast.makeText(requireContext(), "Error al cargar mensajes: ${error.message}", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
+
+        mensajesRef.addValueEventListener(valueEventListener)
     }
 
     private fun enviarMensaje() {
@@ -210,9 +245,19 @@ class Mensajes : Fragment() {
         nuevoMensajeRef.setValue(mensaje)
             .addOnSuccessListener {
                 editTextMensaje.text.clear()
+                Log.d("Mensajes", "Mensaje enviado correctamente: $textoMensaje")
             }
             .addOnFailureListener { e ->
+                Log.e("Mensajes", "Error al enviar mensaje: ${e.message}")
                 Toast.makeText(requireContext(), "Error al enviar mensaje: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Eliminar los listeners para evitar fugas de memoria
+        if (::valueEventListener.isInitialized) {
+            mensajesRef.removeEventListener(valueEventListener)
+        }
     }
 }
