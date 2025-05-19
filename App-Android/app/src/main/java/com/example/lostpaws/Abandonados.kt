@@ -51,7 +51,7 @@ class Abandonados : Fragment() {
 
         recyclerView.adapter = adapter
 
-        cargarPerdidos()
+        cargarAbandonados()
 
         filtro = view.findViewById(R.id.FiltroAbandonados)
         val mascotas = listOf("Todos", "Gato", "Perro", "Hamster", "Pajaro", "Conejo", "Otro")
@@ -61,26 +61,26 @@ class Abandonados : Fragment() {
 
         val botonBuscar = view.findViewById<Button>(R.id.btnBuscar)
         botonBuscar.setOnClickListener {
-            filtrarPerdidosPorTipo()
+            filtrarAbandonadosPorTipo()
         }
     }
 
-    private fun cargarPerdidos() {
+    private fun cargarAbandonados() {
         db.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 abandonadosList.clear()
 
-                for (perdidaSnapshot in snapshot.children) {
-                    val id = perdidaSnapshot.child("mascotaId").getValue(String::class.java) ?: ""
-                    val nombre = perdidaSnapshot.child("mascotaNombre").getValue(String::class.java) ?: ""
-                    val tipo = perdidaSnapshot.child("mascotaTipo").getValue(String::class.java) ?: ""
-                    val raza = perdidaSnapshot.child("mascotaRaza").getValue(String::class.java) ?: ""
-                    val chip = perdidaSnapshot.child("mascotaChip").getValue(String::class.java) ?: ""
-                    val foto = perdidaSnapshot.child("mascotaFoto").getValue(String::class.java) ?: "pinguinoilerna.png"
-                    val fechaReporte = perdidaSnapshot.child("fechaReporte").getValue(String::class.java) ?: ""
-                    val fechaAbandono = perdidaSnapshot.child("fechaAbandono").getValue(String::class.java) ?: ""
-                    val refugioId = perdidaSnapshot.child("refugioId").getValue(String::class.java) ?: ""
-                    val userEmail = perdidaSnapshot.child("userEmail").getValue(String::class.java) ?: ""
+                for (abandonadosSnapShot in snapshot.children) {
+                    val id = abandonadosSnapShot.child("mascotaId").getValue(String::class.java) ?: ""
+                    val nombre = abandonadosSnapShot.child("mascotaNombre").getValue(String::class.java) ?: ""
+                    val tipo = abandonadosSnapShot.child("mascotaTipo").getValue(String::class.java) ?: ""
+                    val raza = abandonadosSnapShot.child("mascotaRaza").getValue(String::class.java) ?: ""
+                    val chip = abandonadosSnapShot.child("mascotaChip").getValue(String::class.java) ?: ""
+                    val foto = abandonadosSnapShot.child("mascotaFoto").getValue(String::class.java) ?: "pinguinoilerna.png"
+                    val fechaReporte = abandonadosSnapShot.child("fechaReporte").getValue(String::class.java) ?: ""
+                    val fechaAbandono = abandonadosSnapShot.child("fechaAbandono").getValue(String::class.java) ?: ""
+                    val refugioId = abandonadosSnapShot.child("refugioId").getValue(String::class.java) ?: ""
+                    val userEmail = abandonadosSnapShot.child("userEmail").getValue(String::class.java) ?: ""
 
                     val abandono = Abandono(id, nombre, tipo, raza, chip, foto, fechaReporte, fechaAbandono,
                         refugioId, userEmail)
@@ -96,11 +96,11 @@ class Abandonados : Fragment() {
         })
     }
 
-    private fun filtrarPerdidosPorTipo() {
+    private fun filtrarAbandonadosPorTipo() {
         val tipoSeleccionado = filtro.selectedItem.toString()
 
         if (tipoSeleccionado == "Todos") {
-            cargarPerdidos()
+            cargarAbandonados()
             return
         }
 
@@ -108,19 +108,19 @@ class Abandonados : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 abandonadosList.clear()
 
-                for (perdidaSnapshot in snapshot.children) {
-                    val tipo = perdidaSnapshot.child("mascotaTipo").getValue(String::class.java) ?: ""
+                for (abandonadosSnapShot in snapshot.children) {
+                    val tipo = abandonadosSnapShot.child("mascotaTipo").getValue(String::class.java) ?: ""
 
                     if (tipo == tipoSeleccionado) {
-                        val id = perdidaSnapshot.child("mascotaId").getValue(String::class.java) ?: ""
-                        val nombre = perdidaSnapshot.child("mascotaNombre").getValue(String::class.java) ?: ""
-                        val raza = perdidaSnapshot.child("mascotaRaza").getValue(String::class.java) ?: ""
-                        val chip = perdidaSnapshot.child("mascotaChip").getValue(String::class.java) ?: ""
-                        val foto = perdidaSnapshot.child("mascotaFoto").getValue(String::class.java) ?: "pinguinoilerna.png"
-                        val fechaReporte = perdidaSnapshot.child("fechaReporte").getValue(String::class.java) ?: ""
-                        val fechaAbandono = perdidaSnapshot.child("fechaAbandono").getValue(String::class.java) ?: ""
-                        val refugioId = perdidaSnapshot.child("refugioId").getValue(String::class.java) ?: ""
-                        val userEmail = perdidaSnapshot.child("userEmail").getValue(String::class.java) ?: ""
+                        val id = abandonadosSnapShot.child("mascotaId").getValue(String::class.java) ?: ""
+                        val nombre = abandonadosSnapShot.child("mascotaNombre").getValue(String::class.java) ?: ""
+                        val raza = abandonadosSnapShot.child("mascotaRaza").getValue(String::class.java) ?: ""
+                        val chip = abandonadosSnapShot.child("mascotaChip").getValue(String::class.java) ?: ""
+                        val foto = abandonadosSnapShot.child("mascotaFoto").getValue(String::class.java) ?: "pinguinoilerna.png"
+                        val fechaReporte = abandonadosSnapShot.child("fechaReporte").getValue(String::class.java) ?: ""
+                        val fechaAbandono = abandonadosSnapShot.child("fechaAbandono").getValue(String::class.java) ?: ""
+                        val refugioId = abandonadosSnapShot.child("refugioId").getValue(String::class.java) ?: ""
+                        val userEmail = abandonadosSnapShot.child("userEmail").getValue(String::class.java) ?: ""
 
                         val abandono = Abandono(id, nombre, tipo, raza, chip, foto, fechaReporte, fechaAbandono,
                             refugioId, userEmail)
@@ -197,8 +197,7 @@ class Abandonados : Fragment() {
         })
     }
 
-    private fun crearRelacionChat(userId: String, userName: String, userEmail: String?,
-                                  refugioId: String, refugioName: String, refugioEmail: String) {
+    private fun crearRelacionChat(userId: String, userName: String, userEmail: String?, refugioId: String, refugioName: String, refugioEmail: String) {
         val relacionDuenyoUsuario = FirebaseDatabase.getInstance().getReference().child("relacionChats")
         val relacionDuenyoUsuarioId = relacionDuenyoUsuario.push().key
 
