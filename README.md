@@ -6,8 +6,8 @@ La aplicación incorpora funcionalidades como:
 
 - Mensajería entre usuarios
 - Registro de datos de animales y usuarios
-- Notificaciones en tiempo real
-- Almacenamiento en la nube mediante **Firebase** y **Google Drive**
+- Notificaciones en tiempo real (A futuro)
+- Almacenamiento en la nube mediante **Firebase** y **Google Drive** (A futuro)
 
 Gracias a estas herramientas, LostPaws ofrece una solución moderna, segura y escalable para ayudar a más animales a encontrar un hogar definitivo.
 
